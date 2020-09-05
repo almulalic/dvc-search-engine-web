@@ -7,20 +7,43 @@
   font-family: "KumbhSans";
 }
 
-.SearchForm--CardHeader {
+.SearchForm--Card {
   width: 50vw;
   text-align: start;
   margin-bottom: 5vh;
-}
-
-.SearchForm--CardBody {
-  width: 50vw;
-  text-align: start;
 }
 
 .SearchForm--SelectContainer {
   width: 20vw;
   h3 {
     text-align: left;
+  }
+}
+
+.SearchForm--Header {
+  * {
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  .SearchForm--HeaderTitle {
+    font-size: 1.5vw;
+    margin: 0;
+  }
+
+  .SearchForm--HeaderSubtitle {
+    font-size: 1.1vw;
+    margin: 0;
+    color: rgba(0, 0, 0, 0.45);
+  }
+
+  .SearchForm--CounterTitle {
+    font-size: 1.1vw;
+    margin: 0;
+    color: rgba(0, 0, 0, 0.45);
+  }
+
+  .SearchForm--Counter {
+    font-size: 1.1vw;
   }
 }

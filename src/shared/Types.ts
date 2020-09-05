@@ -104,7 +104,7 @@ export const StatusAlias = [
 
 export const OrderTypes = {
   0: "Id",
-  1: "Market",
+  1: "Broker",
   2: "Resort",
   3: "Points",
   4: "UseYear",

@@ -72,21 +72,42 @@ export const SearchFormLayout = () => {
     console.log(`selected ${value}`);
   }
 
+  const searchFormHeaderMarkup = (
+    <div className="SearchForm--Header">
+      <Row gutter={[16, 16]} align="middle" justify="space-between">
+        <Col span={20}>
+          <span className="SearchForm--HeaderTitle">Search</span>
+        </Col>
+        <Col span={4}>
+          <span className="SearchForm--HeaderSubtitle">Time Left</span>
+        </Col>
+      </Row>
+      <Row gutter={[16, 16]} align="middle" justify="space-between">
+        <Col span={20}>
+          <span className="SearchForm--CounterTitle">
+            1093 properties available!
+          </span>
+        </Col>
+        <Col span={4}>
+          <span className="SearchForm--Counter">
+            <Countdown
+              value={deadline}
+              onFinish={() => setDeadline(calculateTimer())}
+              format="HH:mm:ss"
+            />
+          </span>
+        </Col>
+      </Row>
+    </div>
+  );
+
   return (
     <div className="SearchForm">
       <Card
-        className="SearchForm--CardHeader"
-        title="Search"
+        className="SearchForm--Card"
+        title={searchFormHeaderMarkup}
         hoverable
         bordered={false}
-        extra={
-          <Countdown
-            title="Next Update"
-            value={deadline}
-            onFinish={() => setDeadline(calculateTimer())}
-            format="HH:mm:ss"
-          />
-        }
       >
         <Row>
           <Col span={12}>
@@ -123,7 +144,14 @@ export const SearchFormLayout = () => {
                     defaultValue="lucy"
                     style={{ width: 120 }}
                     onChange={handleChange}
-                  ></Select>
+                  >
+                    <Option value="id">Id</Option>
+                    <Option value="broker">Broker</Option>
+                    <Option value="resort">Resort</Option>
+                    <Option value="points">Points</Option>
+                    <Option value="useYear">Use Year</Option>
+                    <Option value="price">Price</Option>
+                  </Select>
                 </div>
                 <div>
                   <h3>Order</h3>
@@ -140,6 +168,7 @@ export const SearchFormLayout = () => {
             </Space>
           </Col>
         </Row>
+        <Card.Meta description="aaa"></Card.Meta>
       </Card>
     </div>
   );
