@@ -1,0 +1,213 @@
+.Carousel--OverlayCaption {
+  position: absolute;
+  left: 50%;
+  transform: translate(-50%, 0);
+  top: 11vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  z-index: 999;
+
+  .Carousel--Logo {
+    height: 6vh;
+    width: 6vw;
+    padding: 0;
+    margin-bottom: 0.5vh;
+    background: url("../../assets/icons/logo.svg");
+    background-repeat: no-repeat;
+    background-position: center;
+    filter: brightness(0) invert(1);
+    align-self: center;
+  }
+
+  hr {
+    margin: 0.5vh 0 1vh 0;
+  }
+
+  h1 {
+    color: white;
+    font-size: 2.4vw;
+    font-family: "KumbhSans";
+    letter-spacing: 0.25vw;
+    margin: 0;
+  }
+
+  h3 {
+    color: white;
+    font-size: 1.2vw;
+    font-family: "KumbhSans";
+    letter-spacing: 0.15vw;
+    margin-bottom: 1vh;
+  }
+
+  .Carousel--ViewListingsButton {
+    height: 2.2vh;
+    width: 20vw;
+    padding: 0;
+    position: relative;
+
+    & span {
+      position: absolute;
+      left: 50%;
+      transform: translate(-50%, 0);
+      top: 0.1vh;
+      font-size: 6px;
+      font-weight: bold;
+    }
+  }
+}
+
+@media (min-width: 375px) {
+  .Carousel--OverlayCaption {
+    top: 13vh;
+
+    .Carousel--Logo {
+      height: 8vh;
+      width: 8vw;
+    }
+
+    .Carousel--ViewListingsButton {
+      height: 2.6vh;
+
+      & span {
+        top: 0.2vh;
+      }
+    }
+  }
+}
+
+@media (min-width: 425px) {
+  .Carousel--OverlayCaption {
+    top: 15vh;
+
+    .Carousel--Logo {
+      height: 9vh;
+      width: 9vw;
+    }
+
+    .Carousel--ViewListingsButton {
+      height: 2.7vh;
+
+      & span {
+        top: 0;
+        font-size: 1.7vw;
+      }
+    }
+  }
+}
+
+@media (min-width: 530px) {
+  .Carousel--OverlayCaption {
+    top: 18vh;
+
+    .Carousel--Logo {
+      height: 10vh;
+      width: 10vw;
+    }
+
+    .Carousel--ViewListingsButton {
+      height: 3vh;
+    }
+  }
+}
+
+@media (min-width: 650px) {
+  .Carousel--OverlayCaption {
+    top: 14vh;
+
+    .Carousel--ViewListingsButton {
+      height: 3.3vh;
+    }
+  }
+}
+
+@media (min-width: 768px) {
+  .Carousel--OverlayCaption {
+    top: 28%;
+
+    .Carousel--Logo {
+      height: 12vh;
+      width: 12vw;
+      margin-bottom: 2vh;
+    }
+
+    hr {
+      margin: 1vh 0 1vh 0;
+    }
+
+    h1 {
+      color: white;
+      font-size: 2.4vw;
+      font-family: "KumbhSans";
+      letter-spacing: 0.25vw;
+      margin: 0;
+    }
+
+    h3 {
+      color: white;
+      font-size: 1.2vw;
+      font-family: "KumbhSans";
+      letter-spacing: 0.15vw;
+      margin-bottom: 2vh;
+    }
+
+    .Carousel--ViewListingsButton {
+      height: 4.3vh;
+      & span {
+        top: 0;
+        font-size: 1.6vw;
+      }
+    }
+  }
+}
+
+@media (min-width: 1024px) {
+  .Carousel--OverlayCaption {
+    .Carousel--Logo {
+      height: 14vh;
+      width: 14vw;
+    }
+
+    .Carousel--ViewListingsButton {
+      height: 5.4vh;
+      & span {
+        top: 0;
+        font-size: 1.6vw;
+      }
+    }
+  }
+}
+
+@media (min-width: 1440px) {
+  .Carousel--OverlayCaption {
+    .Carousel--Logo {
+      height: 16vh;
+      width: 16vw;
+    }
+
+    .Carousel--ViewListingsButton {
+      height: 7.5vh;
+      & span {
+        top: 0;
+        font-size: 1.3vw;
+      }
+    }
+  }
+}
+
+@media (min-width: 1560px) {
+  .Carousel--OverlayCaption {
+    .Carousel--Logo {
+      height: 17vh;
+      width: 17vw;
+    }
+
+    .Carousel--ViewListingsButton {
+      height: 4.5vh;
+      & span {
+        top: 0;
+        font-size: 1.3vw;
+      }
+    }
+  }
+}
