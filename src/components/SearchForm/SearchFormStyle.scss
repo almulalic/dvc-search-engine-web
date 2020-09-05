@@ -1,0 +1,26 @@
+.SearchForm {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding-bottom: 20rem;
+  font-family: "KumbhSans";
+}
+
+.SearchForm--CardHeader {
+  width: 50vw;
+  text-align: start;
+  margin-bottom: 5vh;
+}
+
+.SearchForm--CardBody {
+  width: 50vw;
+  text-align: start;
+}
+
+.SearchForm--SelectContainer {
+  width: 20vw;
+  h3 {
+    text-align: left;
+  }
+}

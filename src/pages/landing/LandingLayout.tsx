@@ -1,13 +1,18 @@
 import React from "react";
 
-import "./LandingStyle.scss";
 import { LandingCarousel, SearchForm } from "../../components";
+
+import "./LandingStyle.scss";
 
 export const LandingLayout = () => {
   return (
     <div className="LandingPage">
-      <LandingCarousel />
-      <SearchForm />
+      <div className="LandingPage--Carousel">
+        <LandingCarousel />
+      </div>
+      <div className="LandingPage--SearchForm">
+        <SearchForm />
+      </div>
     </div>
   );
 };
