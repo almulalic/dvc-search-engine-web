@@ -1,16 +1,11 @@
 .SearchForm {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  padding-bottom: 20rem;
   font-family: "KumbhSans";
+  user-select: none;
 }
 
 .SearchForm--Card {
   width: 50vw;
   text-align: start;
-  margin-bottom: 5vh;
 }
 
 .SearchForm--SelectContainer {
@@ -21,6 +16,9 @@
 }
 
 .SearchForm--Header {
+  display: flex;
+  flex-direction: column;
+
   * {
     margin: 0 !important;
     padding: 0 !important;
@@ -46,4 +44,10 @@
   .SearchForm--Counter {
     font-size: 1.1vw;
   }
+}
+
+.SearchForm--OptionComment {
+  font-size: 0.73vw;
+  color: rgba(0, 0, 0, 0.7);
+  margin: 0;
 }

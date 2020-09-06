@@ -1,8 +1,50 @@
+:root {
+  --width: 100vw;
+  --full-width: 100vw;
+
+  @media (min-width: 42em) {
+    --width: 42rem;
+  }
+
+  --angle: -11deg;
+  /*-----------------
+  Magic Number Alert:
+  
+  the 0.09719 is calculated by this formula:
+  tan(11°) / 2
+  11° is the current skewY value.
+  ------------------*/
+  --magic-number: 0.09719;
+  --skew-padding: calc(var(--width) * var(--magic-number));
+  --clip-padding: calc(var(--full-width) * var(--magic-number));
+}
+
 .LandingPage--BannerImage {
   height: 100vh;
   width: 100vw;
 }
 
 .LandingPage--SearchForm {
-  background: pink;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  height: 80vh;
+  align-items: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-image: url("../../assets/images/Test/26109.jpg");
+}
+
+.LandingPage--SearchFormContent {
+  max-width: 50em;
+  margin: 0 auto;
+  position: relative;
+}
+
+.LandingPage--SupportedMarkets {
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-image: url("../../assets/images/Test/gray.jpg");
 }

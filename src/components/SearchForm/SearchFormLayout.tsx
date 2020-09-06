@@ -1,6 +1,23 @@
 import React, { useState, useEffect } from "react";
+import {
+  SearchOutlined,
+  SaveOutlined,
+  CopyOutlined,
+  SaveTwoTone,
+  CopyTwoTone,
+} from "@ant-design/icons";
 
-import { Card, Statistic, Space, Select, Row, Col } from "antd";
+import {
+  Card,
+  Statistic,
+  Space,
+  Select,
+  Row,
+  Col,
+  Checkbox,
+  Tooltip,
+  Button,
+} from "antd";
 
 import "./SearchFormStyle.scss";
 import { calculateTimer } from "./SearchForm";
@@ -12,8 +29,9 @@ import {
 } from "../../shared/Types";
 
 export const SearchFormLayout = () => {
+  //#region Counter
+
   const { Countdown } = Statistic;
-  const { Option } = Select;
 
   const [deadline, setDeadline] = useState("");
 
@@ -21,74 +39,32 @@ export const SearchFormLayout = () => {
     setDeadline(calculateTimer());
   }, []);
 
-  const [allDropdownOptions, setAllDropdownOptions] = useState([]);
+  //#endregion
 
-  useEffect(() => {
-    setAllDropdownOptions([
-      {
-        label: "Brokers",
-        dropdown: BrokerAlias.map(([key, value]) => {
-          return (
-            <Option key={key} value={value}>
-              {key}
-            </Option>
-          );
-        }),
-      },
-      {
-        label: "Resorts",
-        dropdown: ResortAlias.map(([key, value]) => {
-          return (
-            <Option key={key} value={value}>
-              {key}
-            </Option>
-          );
-        }),
-      },
-      {
-        label: "Use Year",
-        dropdown: UseYearAlias.map(([key, value]) => {
-          return (
-            <Option key={key} value={value}>
-              {key}
-            </Option>
-          );
-        }),
-      },
-      {
-        label: "Status",
-        dropdown: StatusAlias.map(([key, value]) => {
-          return (
-            <Option key={key} value={value}>
-              {key}
-            </Option>
-          );
-        }),
-      },
-    ]);
-  }, []);
-
-  function handleChange(value) {
-    console.log(`selected ${value}`);
-  }
+  //#region Header
 
   const searchFormHeaderMarkup = (
     <div className="SearchForm--Header">
-      <Row gutter={[16, 16]} align="middle" justify="space-between">
-        <Col span={20}>
+      <Row gutter={24} align="middle" justify="space-between">
+        <Col span={18}>
           <span className="SearchForm--HeaderTitle">Search</span>
         </Col>
-        <Col span={4}>
+        <Col span={5}>
           <span className="SearchForm--HeaderSubtitle">Time Left</span>
         </Col>
+        <Col span={1}>
+          <Tooltip title="Copy search form to clipboard.">
+            <Button type="primary" icon={<CopyOutlined />} size="middle" />
+          </Tooltip>
+        </Col>
       </Row>
-      <Row gutter={[16, 16]} align="middle" justify="space-between">
-        <Col span={20}>
+      <Row gutter={24} align="middle" justify="space-between">
+        <Col span={18}>
           <span className="SearchForm--CounterTitle">
             1093 properties available!
           </span>
         </Col>
-        <Col span={4}>
+        <Col span={5}>
           <span className="SearchForm--Counter">
             <Countdown
               value={deadline}
@@ -97,10 +73,179 @@ export const SearchFormLayout = () => {
             />
           </span>
         </Col>
+        <Col span={1}>
+          <Tooltip title="Save search for yourself." placement="bottom">
+            <Button type="primary" icon={<SaveOutlined />} size="middle" />
+          </Tooltip>
+        </Col>
       </Row>
     </div>
   );
 
+  //#endregion
+
+  //#region Dropdowns
+
+  const { Option } = Select;
+
+  const handleChange = (value) => {
+    console.log(`selected ${value}`);
+  };
+
+  const allDropdownOptions = [
+    {
+      label: "Brokers",
+      dropdown: BrokerAlias.map(([key, value]) => {
+        return (
+          <Option key={key} value={value}>
+            {key}
+          </Option>
+        );
+      }),
+    },
+    {
+      label: "Resorts",
+      dropdown: ResortAlias.map(([key, value]) => {
+        return (
+          <Option key={key} value={value}>
+            {key}
+          </Option>
+        );
+      }),
+    },
+    {
+      label: "Use Year",
+      dropdown: UseYearAlias.map(([key, value]) => {
+        return (
+          <Option key={key} value={value}>
+            {key}
+          </Option>
+        );
+      }),
+    },
+    {
+      label: "Status",
+      dropdown: StatusAlias.map(([key, value]) => {
+        return (
+          <Option key={key} value={value}>
+            {key}
+          </Option>
+        );
+      }),
+    },
+  ];
+
+  const dropdownsMarkup = (
+    <Space direction="vertical" size="middle">
+      {allDropdownOptions.map((x, i) => {
+        return (
+          <div className="SearchForm--SelectContainer" key={i}>
+            <h3>{x.label}</h3>
+            <Select
+              mode="multiple"
+              style={{ width: "100%" }}
+              placeholder="Select or Input"
+              optionLabelProp="key"
+              optionFilterProp="key"
+              onChange={handleChange}
+              tokenSeparators={[","]}
+              allowClear
+              bordered
+              showArrow
+            >
+              {x.dropdown}
+            </Select>
+          </div>
+        );
+      })}
+    </Space>
+  );
+
+  //#endregion
+
+  //#region Order
+
+  const orderMarkup = (
+    <Space direction="horizontal" size="middle">
+      <div>
+        <h3>Sort By</h3>
+        <Select
+          defaultValue="broker"
+          style={{ width: 120 }}
+          onChange={handleChange}
+        >
+          <Option value="id">Id</Option>
+          <Option value="broker">Broker</Option>
+          <Option value="resort">Resort</Option>
+          <Option value="points">Points</Option>
+          <Option value="useYear">Use Year</Option>
+          <Option value="price">Price</Option>
+        </Select>
+      </div>
+      <div>
+        <h3>Order</h3>
+        <Select
+          defaultValue="ASC"
+          style={{ width: 120 }}
+          onChange={handleChange}
+        >
+          <Option value="ASC">Ascending</Option>
+          <Option value="DESC">Descending</Option>
+        </Select>
+      </div>
+    </Space>
+  );
+
+  //#endregion
+
+  //#region Pagination
+
+  const paginationOptionsMarkup = (
+    <Space direction="horizontal" size="middle">
+      <div>
+        <h3>Items per page</h3>
+        <Select
+          defaultValue="broker"
+          style={{ width: 120 }}
+          onChange={handleChange}
+        >
+          <Option value="id">5</Option>
+          <Option value="broker">10</Option>
+          <Option value="resort">15</Option>
+          <Option value="points">20</Option>
+          <Option value="useYear">30</Option>
+          <Option value="price">50</Option>
+        </Select>
+      </div>
+    </Space>
+  );
+
+  //#endregion
+
+  //#region More Options
+
+  const moreOptionsMarkup = (
+    <Space direction="vertical" size="middle">
+      <div>
+        <Checkbox onChange={handleChange}>Include defective data</Checkbox>
+        <p className="SearchForm--OptionComment">
+          Includes data that has some information missing or undefined.
+        </p>
+      </div>
+      <div>
+        <Checkbox onChange={handleChange}>Submit on change</Checkbox>
+        <p className="SearchForm--OptionComment">
+          If selected search will occur every time one of the fields is changed.
+        </p>
+      </div>
+    </Space>
+  );
+
+  //#endregion
+
+  //#region
+
+  //#endregion
   return (
     <div className="SearchForm">
       <Card
@@ -109,66 +254,24 @@ export const SearchFormLayout = () => {
         hoverable
         bordered={false}
       >
-        <Row>
+        <Row align="middle">
+          <Col span={12}>{dropdownsMarkup}</Col>
           <Col span={12}>
             <Space direction="vertical" size="middle">
-              {allDropdownOptions.map((x, i) => {
-                return (
-                  <div className="SearchForm--SelectContainer" key={i}>
-                    <h3>{x.label}</h3>
-                    <Select
-                      mode="multiple"
-                      style={{ width: "100%" }}
-                      placeholder="Select or Input"
-                      optionLabelProp="key"
-                      optionFilterProp="key"
-                      onChange={handleChange}
-                      tokenSeparators={[","]}
-                      allowClear
-                      bordered
-                      showArrow
-                    >
-                      {x.dropdown}
-                    </Select>
-                  </div>
-                );
-              })}
-            </Space>
-          </Col>
-          <Col span={12}>
-            <Space direction="vertical" size="middle">
-              <Space direction="horizontal" size="middle">
-                <div>
-                  <h3>Sort By</h3>
-                  <Select
-                    defaultValue="lucy"
-                    style={{ width: 120 }}
-                    onChange={handleChange}
-                  >
-                    <Option value="id">Id</Option>
-                    <Option value="broker">Broker</Option>
-                    <Option value="resort">Resort</Option>
-                    <Option value="points">Points</Option>
-                    <Option value="useYear">Use Year</Option>
-                    <Option value="price">Price</Option>
-                  </Select>
-                </div>
-                <div>
-                  <h3>Order</h3>
-                  <Select
-                    defaultValue="ASC"
-                    style={{ width: 120 }}
-                    onChange={handleChange}
-                  >
-                    <Option value="ASC">Ascending</Option>
-                    <Option value="DESC">Descending</Option>
-                  </Select>
-                </div>
-              </Space>
+              {orderMarkup}
+              {paginationOptionsMarkup}
+              {moreOptionsMarkup}
+              <Button
+                type="primary"
+                icon={<SearchOutlined />}
+                size="middle"
+                block
+              >
+                Search
+              </Button>
             </Space>
           </Col>
         </Row>
-        <Card.Meta description="aaa"></Card.Meta>
       </Card>
     </div>
   );
