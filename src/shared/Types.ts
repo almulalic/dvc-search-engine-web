@@ -14,6 +14,22 @@ export const BrokerAlias = [
   ["DVC Resales Shop", 4],
 ];
 
+export const BrokerDescriptions = {
+  0: "DVC Resale Market is the leader in the DVC resales industry with 11 former Guides and 2 former Quality Assurance Managers ready to help you buy or sell Disney Vacation Club resales today!",
+  1: "We are a family owned and operated Real Estate Brokerage with over 20 years experience specializing in the DVC resale market. We take pride in being honest, friendly and attentive to your every need so that whether you are buying or selling your Disney points, the process is easy and care-free.",
+  2: "The DVC Store offers a large selection of Disney Vacation Club Resales. See how easy and affordable it is to purchase your very own piece of the 'MAGIC'. Bookmark the site, check often, and watch them sell. SELLERS, no upfront fees!",
+  3: "The Timeshare Store, Inc. is a real estate company specializing in Disney Vacation Club resales. Our office is located in Orlando in the Williamsburg Downs Shopping Center along Central Florida Parkway, around three blocks away from SeaWorld and 1 exit away from Walt Disney World.",
+  4: "Bee has worked in all facets of the Real Estate industry in her 35+ years of experience. Her knowledge of DVC and the resale market is vast and her integrity and service to her clients has earned her a reputation of excellence.",
+};
+
+export const BrokerURL = {
+  0: "https://www.dvcresalemarket.com",
+  1: "https://www.resalesdvc.com",
+  2: "https://www.dvcstore.com",
+  3: "https://http://www.dvcresale.com",
+  4: "https://resales.dvcshop.com",
+};
+
 export const ResortTypes = {
   0: "Animal Kingdom",
   1: "Aulani",
@@ -100,6 +116,21 @@ export const StatusAlias = [
   ["Nearly Double Points", 9],
   ["Extended", 10],
   ["Expires", 11],
+];
+
+export const StatusColor = [
+  "#6d6d6dcc",
+  "#0166d0cc",
+  "#d07d0166",
+  "#20cc5acc",
+  "#c4ce3866",
+  "#aa0a12cc",
+  "#d01901cc",
+  "#09bdcacc",
+  "#ca099acc",
+  "#09ca90cc",
+  "#3f970dcc",
+  "#a309cacc",
 ];
 
 export const OrderTypes = {

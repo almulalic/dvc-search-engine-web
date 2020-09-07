@@ -1,4 +1,5 @@
 import React from "react";
+import { Layout } from "antd";
 
 import {
   LandingCarousel,
@@ -9,17 +10,22 @@ import {
 import "./LandingStyle.scss";
 
 export const LandingLayout = () => {
+  const { Header, Footer, Sider, Content } = Layout;
+
   return (
     <div className="LandingPage">
-      <div className="LandingPage--Carousel">
-        <LandingCarousel />
-      </div>
-      <div className="LandingPage--SearchForm">
-        <SearchForm />
-      </div>
-      <div className="LandingPage--SupportedMarkets">
-        <SupportedMarkets />
-      </div>
+      <Layout>
+        <div className="LandingPage--Carousel">
+          <LandingCarousel />
+        </div>
+        <div className="LandingPage--SearchForm">
+          <SearchForm />
+        </div>
+        <div className="LandingPage--SupportedMarkets">
+          <SupportedMarkets />
+        </div>
+        <Footer>Footer</Footer>
+      </Layout>
     </div>
   );
 };

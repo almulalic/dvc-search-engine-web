@@ -81,19 +81,81 @@ html {
     padding: 1rem;
   }
 }
-.card {
-  .dvccard1 {
-    &--front {
-      background-image: linear-gradient(
-          to right bottom,
-          rgba($color-primary-dark, 0.65),
-          rgba($color-primary-light, 0.7)
-        ),
-        url("../../assets/images/Broker/dvccard1.jpg");
+
+.dvccard1 {
+  .card {
+    &__side {
+      &--front {
+        background-image: linear-gradient(
+            to right bottom,
+            rgba($color-primary-dark, 0.8),
+            rgba($color-primary-light, 0.9)
+          ),
+          url("../../assets/images/Broker/dvccard3.jpg");
+      }
     }
   }
 }
 
+.dvccard2 {
+  .card {
+    &__side {
+      &--front {
+        background-image: linear-gradient(
+            to right bottom,
+            rgba($color-primary-dark, 0.8),
+            rgba($color-primary-light, 0.9)
+          ),
+          url("../../assets/images/Broker/dvccard2.jpg");
+      }
+    }
+  }
+}
+
+.dvccard3 {
+  .card {
+    &__side {
+      &--front {
+        background-image: linear-gradient(
+            to right bottom,
+            rgba($color-primary-dark, 0.8),
+            rgba($color-primary-light, 0.9)
+          ),
+          url("../../assets/images/Broker/dvccard3.jpg");
+      }
+    }
+  }
+}
+
+.dvccard4 {
+  .card {
+    &__side {
+      &--front {
+        background-image: linear-gradient(
+            to right bottom,
+            rgba($color-primary-dark, 0.8),
+            rgba($color-primary-light, 0.9)
+          ),
+          url("../../assets/images/Broker/dvccard4.jpg");
+      }
+    }
+  }
+}
+
+.dvccard5 {
+  .card {
+    &__side {
+      &--front {
+        background-image: linear-gradient(
+            to right bottom,
+            rgba($color-primary-dark, 0.8),
+            rgba($color-primary-light, 0.9)
+          ),
+          url("../../assets/images/Broker/dvccard5.jpg");
+      }
+    }
+  }
+}
 .card {
   flex: initial;
   position: relative;
@@ -117,12 +179,6 @@ html {
     box-shadow: 0 2rem 6rem rgba($color-black, 0.15);
 
     &--front {
-      background-image: linear-gradient(
-          to right bottom,
-          rgba($color-primary-dark, 0.65),
-          rgba($color-primary-light, 0.7)
-        ),
-        url("../../assets/images/Broker/dvccard1.jpg");
       background-size: cover;
       background-position: center;
     }
@@ -173,7 +229,8 @@ html {
   &__cover {
     position: relative;
     background-size: cover;
-    height: 20vh;
+
+    height: 5rem;
     // background-blend-mode: screen;
     -webkit-clip-path: polygon(0 0, 100% 0, 100% 85%, 0 100%);
     clip-path: polygon(0 0, 100% 0, 100% 85%, 0 100%);
@@ -192,35 +249,25 @@ html {
     color: $color-white;
     @include absCenter;
     width: 75%;
+    height: 3rem;
   }
 
   &__heading-span {
-    font-family: "VT323", monospace;
-    font-size: 4.2rem;
+    font-family: "KumbhSans", monospace;
+    font-size: 2rem;
     font-weight: 300;
     text-transform: uppercase;
-    padding: 1rem 1.5rem;
+    padding: 1rem 1rem;
     color: $color-white;
   }
 
   &__details {
-    font-family: "Inconsolata", monospace;
-    padding: 4rem 2rem;
-    ul {
-      list-style: none;
-      width: 80%;
-      margin: 0 auto;
-
-      li {
-        text-align: center;
-        font-size: 1.8rem;
-        padding: 1rem;
-
-        &:not(:last-child) {
-          border-bottom: 1px solid $color-gray-light;
-        }
-      }
-    }
+    font-family: "KumbhSans", monospace;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-content: center;
+    padding: 2.5rem;
   }
 
   // Responsivity

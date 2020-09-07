@@ -17,6 +17,8 @@ import {
   Checkbox,
   Tooltip,
   Button,
+  message,
+  Modal,
 } from "antd";
 
 import "./SearchFormStyle.scss";
@@ -43,6 +45,25 @@ export const SearchFormLayout = () => {
 
   //#region Header
 
+  const copyFiltersToClipboard = () => {
+    message.success("Successfully copied to clipboard!");
+  };
+
+  const [savedFilters, setSavedFilters] = useState([]);
+  const [saveModalVisible, setSaveModalVisible] = useState(false);
+  const saveToCookies = () => {
+    console.log("now");
+  };
+
+  useEffect(() => {
+    setSavedFilters([
+      {
+        name: "Filter One",
+        value: { meh: 0 },
+      },
+    ]);
+  }, []);
+
   const searchFormHeaderMarkup = (
     <div className="SearchForm--Header">
       <Row gutter={24} align="middle" justify="space-between">
@@ -54,7 +75,14 @@ export const SearchFormLayout = () => {
         </Col>
         <Col span={1}>
           <Tooltip title="Copy search form to clipboard.">
-            <Button type="primary" icon={<CopyOutlined />} size="middle" />
+            <Button
+              type="primary"
+              icon={<CopyOutlined />}
+              size="middle"
+              onClick={() => {
+                copyFiltersToClipboard();
+              }}
+            />
           </Tooltip>
         </Col>
       </Row>
@@ -75,10 +103,42 @@ export const SearchFormLayout = () => {
         </Col>
         <Col span={1}>
           <Tooltip title="Save search for yourself." placement="bottom">
-            <Button type="primary" icon={<SaveOutlined />} size="middle" />
+            <Button
+              type="primary"
+              icon={<SaveOutlined />}
+              size="middle"
+              onClick={() => setSaveModalVisible(true)}
+            />
           </Tooltip>
         </Col>
       </Row>
+      <Modal
+        visible={saveModalVisible}
+        title="Save Filter"
+        onOk={() => {
+          saveToCookies();
+        }}
+        onCancel={() => setSaveModalVisible(false)}
+        footer={[
+          <Button key="back" onClick={() => setSaveModalVisible(false)}>
+            Return
+          </Button>,
+          <Button key="submit" type="primary" onClick={() => saveToCookies()}>
+            Save
+          </Button>,
+        ]}
+      >
+        <h3>Saved Data</h3>
+        {savedFilters.map((value, key) => {
+          return <div>{value.name}</div>;
+        })}
+
+        <p className="SearchForm--OptionComment">
+          Note that this engine uses cookies to store personal data. If you
+          delete cookies or prevent them from loading you won't be able to
+          access these files !
+        </p>
+      </Modal>
     </div>
   );
 
@@ -254,7 +314,7 @@ export const SearchFormLayout = () => {
         hoverable
         bordered={false}
       >
-        <Row align="middle">
+        <Row gutter={24} align="middle">
           <Col span={12}>{dropdownsMarkup}</Col>
           <Col span={12}>
             <Space direction="vertical" size="middle">
