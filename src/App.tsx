@@ -2,6 +2,7 @@ import React from "react";
 import "./App.scss";
 import { Landing } from "./pages";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import Cookies from "universal-cookie";
 
 const App = () => {
   return (

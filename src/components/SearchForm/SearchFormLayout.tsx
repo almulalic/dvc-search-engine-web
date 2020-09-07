@@ -5,6 +5,7 @@ import {
   CopyOutlined,
   SaveTwoTone,
   CopyTwoTone,
+  RightOutlined,
 } from "@ant-design/icons";
 
 import {
@@ -22,6 +23,9 @@ import {
   Slider,
   DatePicker,
   Typography,
+  Input,
+  Steps,
+  List,
 } from "antd";
 
 import "./SearchFormStyle.scss";
@@ -31,13 +35,39 @@ import {
   ResortAlias,
   UseYearAlias,
   StatusAlias,
+  ResortTypes,
+  UseYearTypes,
+  StatusTypes,
 } from "../../shared/Types";
+import Cookies from "universal-cookie";
+import { SaveModalInnerMarkup } from "./SaveModalInnerMarkup";
+import { decodeCamelCase } from "../../shared/Utils";
+import { BrokerTypes } from "./../../shared/Types";
 
 const { Countdown } = Statistic;
 const { Text, Title } = Typography;
 const { Option } = Select;
+const { Search } = Input;
+
+const cookies = new Cookies();
 
 export const SearchFormLayout = () => {
+  const [filters, setFilters] = useState({
+    broker: [],
+    resort: [],
+    useYear: [],
+    status: [],
+    sidx: "Broker",
+    sord: "Ascending",
+    id: "",
+    points: [0, 100],
+    pricePerPoint: [0, 100],
+    itemsPerPage: 5,
+    currentPage: 1,
+    includeDefectiveData: false,
+    submitOnChange: false,
+  });
+
   //#region Counter
 
   const [deadline, setDeadline] = useState("");
@@ -55,49 +85,148 @@ export const SearchFormLayout = () => {
   };
 
   const [savedFilters, setSavedFilters] = useState([]);
-  const [saveModalVisible, setSaveModalVisible] = useState(false);
-  const saveToCookies = () => {
-    console.log("now");
+  const [isSaveDisabled, setSaveDisabled] = useState(true);
+  const [saveModalVisible, setSaveModalVisible] = useState(true);
+
+  const saveToCookies = (filters) => {
+    cookies.set("filters", JSON.stringify(filters));
   };
+
+  const validateSaveInput = (value) => {
+    if (value.length <= 0 || value.length >= 11) {
+      message.warn("Save name must be between 1 and 10 charachters long.");
+    }
+  };
+
+  useEffect(() => {
+    let tmp = cookies.get("filters");
+    console.log(tmp);
+    // setSavedFilters(cookies.get("filters") ?? []);
+  }, []);
 
   const saveFilterModalMarkup = (
     <Modal
       visible={saveModalVisible}
-      title="Save Filter"
-      onOk={() => {
-        saveToCookies();
-      }}
+      title="Save Filters"
       onCancel={() => setSaveModalVisible(false)}
       footer={[
         <Button key="back" onClick={() => setSaveModalVisible(false)}>
           Return
         </Button>,
-        <Button key="submit" type="primary" onClick={() => saveToCookies()}>
+        <Button
+          key="submit"
+          type="primary"
+          disabled={isSaveDisabled}
+          onClick={() => saveToCookies(filters)}
+        >
           Save
         </Button>,
       ]}
     >
-      <Title level={5}>Saved Data</Title>
-      {savedFilters.map((value, key) => {
-        return <div key={key}>{value.name}</div>;
-      })}
+      <Space direction="vertical" size="large">
+        <List header={<Title level={5}>Filter overview</Title>} bordered>
+          <List.Item>
+            <Text strong>Brokers:</Text>
+            <Text>
+              {filters.broker.length === 0
+                ? "None."
+                : filters.broker.map((x, id) => {
+                    if (id != filters.broker.length - 1)
+                      return BrokerTypes[x] + ",";
+                    else return BrokerTypes[x];
+                  })}
+            </Text>
+          </List.Item>
+          <List.Item>
+            <Text strong>Resorts:</Text>
+            <Text>
+              {filters.resort.length === 0
+                ? "None."
+                : filters.resort.map((x, id) => {
+                    if (id != filters.resort.length - 1)
+                      return ResortTypes[x] + ",";
+                    else return ResortTypes[x];
+                  })}
+            </Text>
+          </List.Item>
+          <List.Item>
+            <Text strong>Use Years:</Text>
+            <Text>
+              {filters.useYear.length === 0
+                ? "None."
+                : filters.useYear.map((x, id) => {
+                    if (id != filters.useYear.length - 1)
+                      return UseYearTypes[x] + ",";
+                    else return UseYearTypes[x];
+                  })}
+            </Text>
+          </List.Item>
+          <List.Item>
+            <Text strong>Statuses:</Text>
+            <Text>
+              {filters.status.length === 0
+                ? "None."
+                : filters.status.map((x, id) => {
+                    if (id != filters.broker.length - 1)
+                      return StatusTypes[x] + ",";
+                    else return StatusTypes[x];
+                  })}
+            </Text>
+          </List.Item>
+          <List.Item>
+            <Text strong>Points:</Text>
+            <Text>
+              From {filters.points[0]} to {filters.points[1]}
+            </Text>
+          </List.Item>
+          <List.Item>
+            <Text strong>Price Per Point:</Text>
+            <Text>
+              From {filters.pricePerPoint[0]} to {filters.pricePerPoint[1]}
+            </Text>
+          </List.Item>
+          <List.Item>
+            <Text strong>ID:</Text>
+            <Text>{filters.id.length === 0 ? "-" : filters.id}</Text>
+          </List.Item>
+          <List.Item>
+            <Text strong>Sort By:</Text>
+            <Text>{filters.sidx}</Text>
+          </List.Item>
+          <List.Item>
+            <Text strong>Order:</Text>
+            <Text>{filters.sord}</Text>
+          </List.Item>
+          <List.Item>
+            <Text strong>Items Per Page:</Text>
+            <Text>{filters.itemsPerPage}</Text>
+          </List.Item>
+          <List.Item>
+            <Text strong>Include Defective Data:</Text>
+            <Text>{filters.includeDefectiveData ? "Yes." : "No."}</Text>
+          </List.Item>
+          <List.Item>
+            <Text strong>Submit On Change:</Text>
+            <Text> {filters.submitOnChange ? "Yes." : "No."}</Text>
+          </List.Item>
+        </List>
 
-      <p className="SearchForm--OptionComment">
-        Note that this engine uses cookies to store personal data. If you delete
-        cookies or prevent them from loading you won't be able to access these
-        files !
-      </p>
+        <div>
+          <Title level={5}>Save name</Title>
+          <Search
+            placeholder="Enter new save name"
+            onSearch={(value) => validateSaveInput(value)}
+            enterButton={<SaveOutlined />}
+          />
+        </div>
+        <Text type="secondary">
+          Note that this engine uses cookies to store personal data. If you
+          delete cookies or prevent them from loading you won't be able to
+          access these save files!
+        </Text>
+      </Space>
     </Modal>
   );
-
-  useEffect(() => {
-    setSavedFilters([
-      {
-        name: "Filter One",
-        value: { meh: 0 },
-      },
-    ]);
-  }, []);
 
   const searchFormHeaderMarkup = (
     <div className="SearchForm--Header">
@@ -149,18 +278,6 @@ export const SearchFormLayout = () => {
   //#endregion
 
   //#region Dropdowns
-
-  const [filters, setFilters] = useState({
-    broker: [],
-    resort: [],
-    useYear: [],
-    status: [],
-    sidx: "Broker",
-    sord: "Ascending",
-    itemsPerPage: 5,
-    currentPage: 1,
-    includeDefectiveData: false,
-  });
 
   const handleDropdownChange = (key, value) => {
     if (key === "broker")
@@ -313,6 +430,17 @@ export const SearchFormLayout = () => {
 
   //#endregion
 
+  //#region Id Input
+
+  const idSearchFieldMarkup = (
+    <div className="SearchForm--SelectContainer">
+      <Title level={5}>ID</Title>
+      <Input placeholder="Input ID" />
+    </div>
+  );
+
+  //#endregion
+
   //#region Output settings
 
   const outputSettingsMarkup = (
@@ -393,7 +521,11 @@ export const SearchFormLayout = () => {
   //#region More Options
 
   const moreOptionsMarkup = (
-    <Space direction="vertical" size="middle">
+    <Space
+      className="SearchForm--MoreOptions"
+      direction="vertical"
+      size="middle"
+    >
       <div className="SearchForm--Checkbox">
         <Checkbox
           onChange={(value) => {
@@ -418,7 +550,7 @@ export const SearchFormLayout = () => {
           If selected search will occur every time one of the fields is changed.
         </p>
       </div>
-      {searchButtonMarkup}
+      <div>{searchButtonMarkup}</div>
     </Space>
   );
 
@@ -438,6 +570,7 @@ export const SearchFormLayout = () => {
             {slidersMarkup}
           </Col>
           <Col lg={24} xl={12} xxl={12}>
+            {idSearchFieldMarkup}
             {outputSettingsMarkup}
             {moreOptionsMarkup}
           </Col>
