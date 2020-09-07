@@ -8,46 +8,95 @@
   text-align: start;
 }
 
-.SearchForm--SelectContainer {
-  width: 20vw;
-  h3 {
-    text-align: left;
+.SearchForm--Header {
+  display: flex;
+  justify-content: space-between;
+
+  .SearchForm--HeaderBlock {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
   }
 }
 
-.SearchForm--Header {
-  display: flex;
-  flex-direction: column;
+.SearchForm--SelectContainer {
+  margin-bottom: 1.5vh;
+}
 
-  * {
-    margin: 0 !important;
-    padding: 0 !important;
-  }
-
-  .SearchForm--HeaderTitle {
-    font-size: 1.5vw;
-    margin: 0;
-  }
-
-  .SearchForm--HeaderSubtitle {
-    font-size: 1.1vw;
-    margin: 0;
-    color: rgba(0, 0, 0, 0.45);
-  }
-
-  .SearchForm--CounterTitle {
-    font-size: 1.1vw;
-    margin: 0;
-    color: rgba(0, 0, 0, 0.45);
-  }
-
-  .SearchForm--Counter {
-    font-size: 1.1vw;
-  }
+.SearchForm--Checkbox {
 }
 
 .SearchForm--OptionComment {
-  font-size: 0.73vw;
+  font-size: 1.3rem;
   color: rgba(0, 0, 0, 0.7);
   margin: 0;
+}
+
+@media (max-width: 992px) {
+  .SearchForm--Header {
+    flex-direction: column;
+    justify-content: space-between;
+
+    .SearchForm--HeaderBlock {
+      flex-direction: column;
+    }
+
+    .SearchForm--HeaderCaption {
+      h3 {
+        margin-bottom: 0;
+      }
+
+      span {
+        border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+        margin-bottom: 1rem;
+      }
+    }
+
+    .SearchForm--HeaderCountdown {
+      margin-bottom: 1rem;
+
+      span {
+        margin-bottom: 0;
+      }
+
+      .SearchForm--Counter {
+        border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+      }
+    }
+
+    .SearchForm--HeaderActions {
+      flex-direction: row;
+      justify-content: center;
+      align-items: center;
+
+      button {
+        margin: 0 3rem 0 3rem;
+      }
+    }
+  }
+
+  .SearchForm--Card {
+    text-align: center;
+  }
+
+  .SearchForm--OptionComment {
+    font-size: 1.5rem;
+    color: rgba(0, 0, 0, 0.7);
+    margin: 0;
+  }
+}
+
+@media (max-width: 576px) {
+  .SearchForm--Header {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+}
+
+@media (min-width: 1200px) {
+  .SearchForm--OutputSettings {
+    justify-content: flex-start;
+    align-items: top;
+  }
 }

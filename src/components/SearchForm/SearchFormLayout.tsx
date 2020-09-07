@@ -20,6 +20,8 @@ import {
   message,
   Modal,
   Slider,
+  DatePicker,
+  Typography,
 } from "antd";
 
 import "./SearchFormStyle.scss";
@@ -31,10 +33,12 @@ import {
   StatusAlias,
 } from "../../shared/Types";
 
+const { Countdown } = Statistic;
+const { Text, Title } = Typography;
+const { Option } = Select;
+
 export const SearchFormLayout = () => {
   //#region Counter
-
-  const { Countdown } = Statistic;
 
   const [deadline, setDeadline] = useState("");
 
@@ -56,6 +60,36 @@ export const SearchFormLayout = () => {
     console.log("now");
   };
 
+  const saveFilterModalMarkup = (
+    <Modal
+      visible={saveModalVisible}
+      title="Save Filter"
+      onOk={() => {
+        saveToCookies();
+      }}
+      onCancel={() => setSaveModalVisible(false)}
+      footer={[
+        <Button key="back" onClick={() => setSaveModalVisible(false)}>
+          Return
+        </Button>,
+        <Button key="submit" type="primary" onClick={() => saveToCookies()}>
+          Save
+        </Button>,
+      ]}
+    >
+      <Title level={5}>Saved Data</Title>
+      {savedFilters.map((value, key) => {
+        return <div key={key}>{value.name}</div>;
+      })}
+
+      <p className="SearchForm--OptionComment">
+        Note that this engine uses cookies to store personal data. If you delete
+        cookies or prevent them from loading you won't be able to access these
+        files !
+      </p>
+    </Modal>
+  );
+
   useEffect(() => {
     setSavedFilters([
       {
@@ -67,87 +101,54 @@ export const SearchFormLayout = () => {
 
   const searchFormHeaderMarkup = (
     <div className="SearchForm--Header">
-      <Row gutter={24} align="middle" justify="space-between">
-        <Col span={18}>
-          <span className="SearchForm--HeaderTitle">Search</span>
-        </Col>
-        <Col span={5}>
-          <span className="SearchForm--HeaderSubtitle">Time Left</span>
-        </Col>
-        <Col span={1}>
-          <Tooltip title="Copy search form to clipboard.">
-            <Button
-              type="primary"
-              icon={<CopyOutlined />}
-              size="middle"
-              onClick={() => {
-                copyFiltersToClipboard();
-              }}
-            />
-          </Tooltip>
-        </Col>
-      </Row>
-      <Row gutter={24} align="middle" justify="space-between">
-        <Col span={18}>
-          <span className="SearchForm--CounterTitle">
-            1093 properties available!
-          </span>
-        </Col>
-        <Col span={5}>
-          <span className="SearchForm--Counter">
-            <Countdown
-              value={deadline}
-              onFinish={() => setDeadline(calculateTimer())}
-              format="HH:mm:ss"
-            />
-          </span>
-        </Col>
-        <Col span={1}>
-          <Tooltip title="Save search for yourself." placement="bottom">
-            <Button
-              type="primary"
-              icon={<SaveOutlined />}
-              size="middle"
-              onClick={() => setSaveModalVisible(true)}
-            />
-          </Tooltip>
-        </Col>
-      </Row>
-      <Modal
-        visible={saveModalVisible}
-        title="Save Filter"
-        onOk={() => {
-          saveToCookies();
-        }}
-        onCancel={() => setSaveModalVisible(false)}
-        footer={[
-          <Button key="back" onClick={() => setSaveModalVisible(false)}>
-            Return
-          </Button>,
-          <Button key="submit" type="primary" onClick={() => saveToCookies()}>
-            Save
-          </Button>,
-        ]}
-      >
-        <h3>Saved Data</h3>
-        {savedFilters.map((value, key) => {
-          return <div key={key}>{value.name}</div>;
-        })}
+      <div className="SearchForm--HeaderBlock SearchForm--HeaderCaption">
+        <Title className="SearchForm--HeaderTitle " level={3}>
+          Search
+        </Title>
+        <Text className="SearchForm--HeaderSubtitle" type="secondary">
+          1093 properties available!
+        </Text>
+      </div>
+      <div className="SearchForm--HeaderBlock SearchForm--HeaderCountdown">
+        <Text className="SearchForm--HeaderSubtitle" type="secondary">
+          Time Left:
+        </Text>
+        <span className="SearchForm--Counter">
+          <Countdown
+            value={deadline}
+            onFinish={() => setDeadline(calculateTimer())}
+            format="HH:mm:ss"
+          />
+        </span>
+      </div>
+      <div className="SearchForm--HeaderBlock SearchForm--HeaderActions">
+        <Tooltip title="Copy search form to clipboard.">
+          <Button
+            type="primary"
+            icon={<CopyOutlined />}
+            size="middle"
+            onClick={() => {
+              copyFiltersToClipboard();
+            }}
+          />
+        </Tooltip>
+        <Tooltip title="Save search for yourself." placement="bottom">
+          <Button
+            type="primary"
+            icon={<SaveOutlined />}
+            size="middle"
+            onClick={() => setSaveModalVisible(true)}
+          />
+        </Tooltip>
+      </div>
 
-        <p className="SearchForm--OptionComment">
-          Note that this engine uses cookies to store personal data. If you
-          delete cookies or prevent them from loading you won't be able to
-          access these files !
-        </p>
-      </Modal>
+      {saveFilterModalMarkup}
     </div>
   );
 
   //#endregion
 
   //#region Dropdowns
-
-  const { Option } = Select;
 
   const [filters, setFilters] = useState({
     broker: [],
@@ -262,111 +263,129 @@ export const SearchFormLayout = () => {
   ];
 
   const dropdownsMarkup = (
-    <Space direction="vertical" size="middle">
+    <Row gutter={24}>
       {allDropdownOptions.map((x, i) => {
         return (
-          <div className="SearchForm--SelectContainer" key={i}>
-            <h3>{x.label}</h3>
-            <Select
-              mode="multiple"
-              style={{ width: "100%" }}
-              placeholder="Select or Input"
-              optionLabelProp="key"
-              optionFilterProp="key"
-              onChange={(value) => handleDropdownChange(x.id, value)}
-              tokenSeparators={[","]}
-              allowClear
-              bordered
-              showArrow
-            >
-              {x.dropdown}
-            </Select>
-          </div>
+          <Col xs={24} sm={24} md={24} lg={24} xl={12} xxl={24}>
+            <div className="SearchForm--SelectContainer" key={i}>
+              <Title level={5}>{x.label}</Title>
+              <Select
+                mode="multiple"
+                style={{ width: "100%" }}
+                placeholder="Select or Input"
+                optionLabelProp="key"
+                optionFilterProp="key"
+                onChange={(value) => handleDropdownChange(x.id, value)}
+                tokenSeparators={[","]}
+                allowClear
+                bordered
+                showArrow
+              >
+                {x.dropdown}
+              </Select>
+            </div>
+          </Col>
         );
       })}
-    </Space>
+    </Row>
   );
 
   //#endregion
 
-  //#region
+  //#region Sliders
 
   const slidersMarkup = (
-    <Space>
-      <div>
-        <h3>Points ($)</h3>
-        <Slider range defaultValue={[20, 50]} />
-      </div>
-      <div>
-        <h3>Price per Point ($)</h3>
-        <Slider range defaultValue={[20, 50]} />
-      </div>
-    </Space>
+    <Row gutter={24}>
+      <Col span={24}>
+        <div className="SearchForm--SelectContainer">
+          <Title level={5}>Points ($)</Title>
+          <Slider range defaultValue={[20, 50]} />
+        </div>
+      </Col>
+      <Col span={24}>
+        <div className="SearchForm--SelectContainer">
+          <Title level={5}>Price per Point ($)</Title>
+          <Slider range defaultValue={[20, 50]} />
+        </div>
+      </Col>
+    </Row>
   );
 
   //#endregion
 
-  //#region Order
+  //#region Output settings
 
-  const orderMarkup = (
-    <Space direction="horizontal" size="middle">
-      <div>
-        <h3>Sort By</h3>
-        <Select
-          defaultValue="broker"
-          style={{ width: 120 }}
-          onChange={(value) => {
-            handleDropdownChange("sidx", value);
-          }}
-        >
-          <Option value="id">Id</Option>
-          <Option value="broker">Broker</Option>
-          <Option value="resort">Resort</Option>
-          <Option value="points">Points</Option>
-          <Option value="useYear">Use Year</Option>
-          <Option value="price">Price</Option>
-        </Select>
-      </div>
-      <div>
-        <h3>Order</h3>
-        <Select
-          defaultValue="ASC"
-          style={{ width: 120 }}
-          onChange={(value) => {
-            handleDropdownChange("sord", value);
-          }}
-        >
-          <Option value="ASC">Ascending</Option>
-          <Option value="DESC">Descending</Option>
-        </Select>
-      </div>
-    </Space>
+  const outputSettingsMarkup = (
+    <Row
+      gutter={24}
+      justify="center"
+      align="middle"
+      className="SearchForm--OutputSettings"
+    >
+      <Col xs={24} sm={24} md={12} lg={8}>
+        <div className="SearchForm--SelectContainer">
+          <Title level={5}>Sort By</Title>
+          <Select
+            defaultValue="broker"
+            style={{ width: 120 }}
+            onChange={(value) => {
+              handleDropdownChange("sidx", value);
+            }}
+          >
+            <Option value="id">Id</Option>
+            <Option value="broker">Broker</Option>
+            <Option value="resort">Resort</Option>
+            <Option value="points">Points</Option>
+            <Option value="useYear">Use Year</Option>
+            <Option value="price">Price</Option>
+          </Select>
+        </div>
+      </Col>
+      <Col xs={24} sm={24} md={12} lg={8}>
+        <div className="SearchForm--SelectContainer">
+          <Title level={5}>Order</Title>
+          <Select
+            defaultValue="ASC"
+            style={{ width: 120 }}
+            onChange={(value) => {
+              handleDropdownChange("sord", value);
+            }}
+          >
+            <Option value="ASC">Ascending</Option>
+            <Option value="DESC">Descending</Option>
+          </Select>
+        </div>
+      </Col>
+      <Col xs={24} sm={24} md={12} lg={8} xl={24} xxl={12}>
+        <div className="SearchForm--SelectContainer">
+          <Title level={5}>Items per page</Title>
+          <Select
+            defaultValue="10"
+            style={{ width: 120 }}
+            onChange={(value) => {
+              handleDropdownChange("ipp", value);
+            }}
+          >
+            <Option value="5">5</Option>
+            <Option value="10">10</Option>
+            <Option value="15">15</Option>
+            <Option value="20">20</Option>
+            <Option value="30">30</Option>
+            <Option value="50">50</Option>
+          </Select>
+        </div>
+      </Col>
+    </Row>
   );
 
   //#endregion
 
-  //#region Pagination
+  //#region Search
 
-  const paginationOptionsMarkup = (
-    <Space direction="horizontal" size="middle">
-      <div>
-        <h3>Items per page</h3>
-        <Select
-          defaultValue="broker"
-          style={{ width: 120 }}
-          onChange={(value) => {
-            handleDropdownChange("ipp", value);
-          }}
-        >
-          <Option value="5">5</Option>
-          <Option value="10">10</Option>
-          <Option value="15">15</Option>
-          <Option value="20">20</Option>
-          <Option value="30">30</Option>
-          <Option value="50">50</Option>
-        </Select>
-      </div>
-    </Space>
+  const searchButtonMarkup = (
+    <Button type="primary" icon={<SearchOutlined />} size="middle" block>
+      Search
+    </Button>
   );
 
   //#endregion
@@ -375,7 +394,7 @@ export const SearchFormLayout = () => {
 
   const moreOptionsMarkup = (
     <Space direction="vertical" size="middle">
-      <div>
+      <div className="SearchForm--Checkbox">
         <Checkbox
           onChange={(value) => {
             handleDropdownChange("idd", value);
@@ -387,7 +406,7 @@ export const SearchFormLayout = () => {
           Includes data that has some information missing or undefined.
         </p>
       </div>
-      <div>
+      <div className="SearchForm--Checkbox">
         <Checkbox
           onChange={(value) => {
             console.log(value);
@@ -399,14 +418,12 @@ export const SearchFormLayout = () => {
           If selected search will occur every time one of the fields is changed.
         </p>
       </div>
+      {searchButtonMarkup}
     </Space>
   );
 
   //#endregion
 
-  //#region
-
-  //#endregion
   return (
     <div className="SearchForm">
       <Card
@@ -415,23 +432,14 @@ export const SearchFormLayout = () => {
         hoverable
         bordered={false}
       >
-        <Row gutter={24} align="middle">
-          <Col span={12}>{dropdownsMarkup}</Col>
-          <Col span={12}>
-            <Space direction="vertical" size="middle">
-              {orderMarkup}
-              {paginationOptionsMarkup}
-              {slidersMarkup}
-              {moreOptionsMarkup}
-              <Button
-                type="primary"
-                icon={<SearchOutlined />}
-                size="middle"
-                block
-              >
-                Search
-              </Button>
-            </Space>
+        <Row gutter={24} justify="center">
+          <Col lg={24} xl={12} xxl={12}>
+            {dropdownsMarkup}
+            {slidersMarkup}
+          </Col>
+          <Col lg={24} xl={12} xxl={12}>
+            {outputSettingsMarkup}
+            {moreOptionsMarkup}
           </Col>
         </Row>
       </Card>

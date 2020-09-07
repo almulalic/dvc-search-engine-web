@@ -1,12 +1,14 @@
 import React from "react";
 
-import { Carousel, Image, Button } from "antd";
+import { Carousel, Image, Button, Typography } from "antd";
 
 import Banner1 from "../../assets/images/DVC-Banner/Banner1.jpg";
 import Banner2 from "../../assets/images/DVC-Banner/Banner2.jpg";
 import Banner3 from "../../assets/images/DVC-Banner/Banner3.jpg";
 
 import "./LandingCarouselStyle.scss";
+
+const { Title } = Typography;
 
 export const LandingCarouselLayout = () => {
   return (
@@ -27,9 +29,11 @@ export const LandingCarouselLayout = () => {
 
         <div className="Carousel--Caption">
           <hr />
-          <h1>DVC RESALE SEARCH ENIGNE</h1>
+          <Title level={1}>DVC RESALE SEARCH ENIGNE</Title>
           <hr />
-          <h3>The only DVC Resale Search Engine that you will ever need</h3>
+          <Title level={3}>
+            The only DVC Resale Search Engine that you will ever need
+          </Title>
         </div>
         <Button className="Carousel--ViewListingsButton" shape="round">
           View Listings

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Layout } from "antd";
 
 import {
@@ -8,6 +8,7 @@ import {
 } from "../../components";
 
 import "./LandingStyle.scss";
+import { CookiesNotificationLayout } from "../../components/CookiesNotification/CookiesNotificationLayout";
 
 export const LandingLayout = () => {
   const { Header, Footer, Sider, Content } = Layout;
@@ -21,9 +22,9 @@ export const LandingLayout = () => {
         <div className="LandingPage--SearchForm">
           <SearchForm />
         </div>
-        <div className="LandingPage--SupportedMarkets">
+        {/* <div className="LandingPage--SupportedMarkets">
           <SupportedMarkets />
-        </div>
+        </div> */}
         <Footer>Footer</Footer>
       </Layout>
     </div>
