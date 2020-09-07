@@ -19,6 +19,7 @@ import {
   Button,
   message,
   Modal,
+  Slider,
 } from "antd";
 
 import "./SearchFormStyle.scss";
@@ -288,6 +289,23 @@ export const SearchFormLayout = () => {
 
   //#endregion
 
+  //#region
+
+  const slidersMarkup = (
+    <Space>
+      <div>
+        <h3>Points ($)</h3>
+        <Slider range defaultValue={[20, 50]} />
+      </div>
+      <div>
+        <h3>Price per Point ($)</h3>
+        <Slider range defaultValue={[20, 50]} />
+      </div>
+    </Space>
+  );
+
+  //#endregion
+
   //#region Order
 
   const orderMarkup = (
@@ -403,6 +421,7 @@ export const SearchFormLayout = () => {
             <Space direction="vertical" size="middle">
               {orderMarkup}
               {paginationOptionsMarkup}
+              {slidersMarkup}
               {moreOptionsMarkup}
               <Button
                 type="primary"
