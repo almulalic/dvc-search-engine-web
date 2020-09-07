@@ -5,3 +5,9 @@ export const decodeCamelCase = (label) => {
 
   return _decodedString.charAt(0).toUpperCase() + _decodedString.slice(1);
 };
+
+export const serializeURL = (filters) => {
+  return Object.entries(filters)
+    .map(([key, val]) => `${key}=${val}`)
+    .join("&");
+};

@@ -41,7 +41,7 @@ import {
 } from "../../shared/Types";
 import Cookies from "universal-cookie";
 import { SaveModalInnerMarkup } from "./SaveModalInnerMarkup";
-import { decodeCamelCase } from "../../shared/Utils";
+import { decodeCamelCase, serializeURL } from "../../shared/Utils";
 import { BrokerTypes } from "./../../shared/Types";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 
@@ -53,6 +53,8 @@ const { Search } = Input;
 const cookies = new Cookies();
 
 export const SearchFormLayout = () => {
+  const baseURL = "https://localhost:3000/allListings?filters=";
+
   const [filters, setFilters] = useState({
     broker: [],
     resort: [],
@@ -145,9 +147,7 @@ export const SearchFormLayout = () => {
       <div className="SearchForm--HeaderBlock SearchForm--HeaderActions">
         <Tooltip title="Copy search form to clipboard.">
           <CopyToClipboard
-            text={`https://localhost:3000/allListings?filters=${JSON.stringify(
-              filters
-            )}`}
+            text={baseURL + serializeURL(filters)}
             onCopy={() => message.success("Successfully copied to clipboard!")}
           >
             <Button type="primary" icon={<CopyOutlined />} size="middle" />
@@ -222,7 +222,6 @@ export const SearchFormLayout = () => {
   useEffect(() => {
     console.log(filters);
   }, [filters]);
-  // const [brokerDropdownValues,setBrokerDropdownValues] = useState([]);
 
   const allDropdownOptions = [
     {
