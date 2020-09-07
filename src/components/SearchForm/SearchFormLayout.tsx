@@ -29,7 +29,7 @@ import {
 } from "antd";
 
 import "./SearchFormStyle.scss";
-import { calculateTimer } from "./SearchForm";
+import { calculateTimer, validateAndSave } from "./SearchForm";
 import {
   BrokerAlias,
   ResortAlias,
@@ -43,6 +43,7 @@ import Cookies from "universal-cookie";
 import { SaveModalInnerMarkup } from "./SaveModalInnerMarkup";
 import { decodeCamelCase } from "../../shared/Utils";
 import { BrokerTypes } from "./../../shared/Types";
+import { CopyToClipboard } from "react-copy-to-clipboard";
 
 const { Countdown } = Statistic;
 const { Text, Title } = Typography;
@@ -80,28 +81,16 @@ export const SearchFormLayout = () => {
 
   //#region Header
 
-  const copyFiltersToClipboard = () => {
-    message.success("Successfully copied to clipboard!");
-  };
+  // Save
 
+  const [saveInput, setSaveInput] = useState("");
   const [savedFilters, setSavedFilters] = useState([]);
-  const [isSaveDisabled, setSaveDisabled] = useState(true);
-  const [saveModalVisible, setSaveModalVisible] = useState(true);
-
-  const saveToCookies = (filters) => {
-    cookies.set("filters", JSON.stringify(filters));
-  };
-
-  const validateSaveInput = (value) => {
-    if (value.length <= 0 || value.length >= 11) {
-      message.warn("Save name must be between 1 and 10 charachters long.");
-    }
-  };
+  const [saveModalVisible, setSaveModalVisible] = useState(false);
 
   useEffect(() => {
-    let tmp = cookies.get("filters");
-    console.log(tmp);
-    // setSavedFilters(cookies.get("filters") ?? []);
+    let rawFilters = cookies.get("filters");
+    if (rawFilters) setSavedFilters(rawFilters);
+    else cookies.set("filters", JSON.stringify([]));
   }, []);
 
   const saveFilterModalMarkup = (
@@ -116,117 +105,20 @@ export const SearchFormLayout = () => {
         <Button
           key="submit"
           type="primary"
-          disabled={isSaveDisabled}
-          onClick={() => saveToCookies(filters)}
+          onClick={() => {
+            if (validateAndSave(saveInput, saveInput, savedFilters, filters))
+              setSaveModalVisible(false);
+          }}
         >
           Save
         </Button>,
       ]}
     >
-      <Space direction="vertical" size="large">
-        <List header={<Title level={5}>Filter overview</Title>} bordered>
-          <List.Item>
-            <Text strong>Brokers:</Text>
-            <Text>
-              {filters.broker.length === 0
-                ? "None."
-                : filters.broker.map((x, id) => {
-                    if (id != filters.broker.length - 1)
-                      return BrokerTypes[x] + ",";
-                    else return BrokerTypes[x];
-                  })}
-            </Text>
-          </List.Item>
-          <List.Item>
-            <Text strong>Resorts:</Text>
-            <Text>
-              {filters.resort.length === 0
-                ? "None."
-                : filters.resort.map((x, id) => {
-                    if (id != filters.resort.length - 1)
-                      return ResortTypes[x] + ",";
-                    else return ResortTypes[x];
-                  })}
-            </Text>
-          </List.Item>
-          <List.Item>
-            <Text strong>Use Years:</Text>
-            <Text>
-              {filters.useYear.length === 0
-                ? "None."
-                : filters.useYear.map((x, id) => {
-                    if (id != filters.useYear.length - 1)
-                      return UseYearTypes[x] + ",";
-                    else return UseYearTypes[x];
-                  })}
-            </Text>
-          </List.Item>
-          <List.Item>
-            <Text strong>Statuses:</Text>
-            <Text>
-              {filters.status.length === 0
-                ? "None."
-                : filters.status.map((x, id) => {
-                    if (id != filters.broker.length - 1)
-                      return StatusTypes[x] + ",";
-                    else return StatusTypes[x];
-                  })}
-            </Text>
-          </List.Item>
-          <List.Item>
-            <Text strong>Points:</Text>
-            <Text>
-              From {filters.points[0]} to {filters.points[1]}
-            </Text>
-          </List.Item>
-          <List.Item>
-            <Text strong>Price Per Point:</Text>
-            <Text>
-              From {filters.pricePerPoint[0]} to {filters.pricePerPoint[1]}
-            </Text>
-          </List.Item>
-          <List.Item>
-            <Text strong>ID:</Text>
-            <Text>{filters.id.length === 0 ? "-" : filters.id}</Text>
-          </List.Item>
-          <List.Item>
-            <Text strong>Sort By:</Text>
-            <Text>{filters.sidx}</Text>
-          </List.Item>
-          <List.Item>
-            <Text strong>Order:</Text>
-            <Text>{filters.sord}</Text>
-          </List.Item>
-          <List.Item>
-            <Text strong>Items Per Page:</Text>
-            <Text>{filters.itemsPerPage}</Text>
-          </List.Item>
-          <List.Item>
-            <Text strong>Include Defective Data:</Text>
-            <Text>{filters.includeDefectiveData ? "Yes." : "No."}</Text>
-          </List.Item>
-          <List.Item>
-            <Text strong>Submit On Change:</Text>
-            <Text> {filters.submitOnChange ? "Yes." : "No."}</Text>
-          </List.Item>
-        </List>
-
-        <div>
-          <Title level={5}>Save name</Title>
-          <Search
-            placeholder="Enter new save name"
-            onSearch={(value) => validateSaveInput(value)}
-            enterButton={<SaveOutlined />}
-          />
-        </div>
-        <Text type="secondary">
-          Note that this engine uses cookies to store personal data. If you
-          delete cookies or prevent them from loading you won't be able to
-          access these save files!
-        </Text>
-      </Space>
+      <SaveModalInnerMarkup filters={filters} setSaveInput={setSaveInput} />
     </Modal>
   );
+
+  // Copy
 
   const searchFormHeaderMarkup = (
     <div className="SearchForm--Header">
@@ -252,16 +144,16 @@ export const SearchFormLayout = () => {
       </div>
       <div className="SearchForm--HeaderBlock SearchForm--HeaderActions">
         <Tooltip title="Copy search form to clipboard.">
-          <Button
-            type="primary"
-            icon={<CopyOutlined />}
-            size="middle"
-            onClick={() => {
-              copyFiltersToClipboard();
-            }}
-          />
+          <CopyToClipboard
+            text={`https://localhost:3000/allListings?filters=${JSON.stringify(
+              filters
+            )}`}
+            onCopy={() => message.success("Successfully copied to clipboard!")}
+          >
+            <Button type="primary" icon={<CopyOutlined />} size="middle" />
+          </CopyToClipboard>
         </Tooltip>
-        <Tooltip title="Save search for yourself." placement="bottom">
+        <Tooltip title="Save filters for yourself." placement="bottom">
           <Button
             type="primary"
             icon={<SaveOutlined />}
