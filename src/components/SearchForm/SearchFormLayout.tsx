@@ -130,7 +130,7 @@ export const SearchFormLayout = () => {
       >
         <h3>Saved Data</h3>
         {savedFilters.map((value, key) => {
-          return <div>{value.name}</div>;
+          return <div key={key}>{value.name}</div>;
         })}
 
         <p className="SearchForm--OptionComment">
@@ -148,13 +148,75 @@ export const SearchFormLayout = () => {
 
   const { Option } = Select;
 
-  const handleChange = (value) => {
-    console.log(`selected ${value}`);
+  const [filters, setFilters] = useState({
+    broker: [],
+    resort: [],
+    useYear: [],
+    status: [],
+    sidx: "Broker",
+    sord: "Ascending",
+    itemsPerPage: 5,
+    currentPage: 1,
+    includeDefectiveData: false,
+  });
+
+  const handleDropdownChange = (key, value) => {
+    if (key === "broker")
+      setFilters({
+        ...filters,
+        broker: value,
+      });
+    else if (key === "resort")
+      setFilters({
+        ...filters,
+        resort: value,
+      });
+    else if (key === "useYear")
+      setFilters({
+        ...filters,
+        useYear: value,
+      });
+    else if (key === "status")
+      setFilters({
+        ...filters,
+        status: value,
+      });
+    else if (key === "sidx")
+      setFilters({
+        ...filters,
+        sidx: value,
+      });
+    else if (key === "sord")
+      setFilters({
+        ...filters,
+        sord: value,
+      });
+    else if (key === "ipp")
+      setFilters({
+        ...filters,
+        itemsPerPage: value,
+      });
+    else if (key === "cp")
+      setFilters({
+        ...filters,
+        currentPage: value,
+      });
+    else if (key === "idd")
+      setFilters({
+        ...filters,
+        includeDefectiveData: value,
+      });
   };
+
+  useEffect(() => {
+    console.log(filters);
+  }, [filters]);
+  // const [brokerDropdownValues,setBrokerDropdownValues] = useState([]);
 
   const allDropdownOptions = [
     {
       label: "Brokers",
+      id: "broker",
       dropdown: BrokerAlias.map(([key, value]) => {
         return (
           <Option key={key} value={value}>
@@ -165,6 +227,7 @@ export const SearchFormLayout = () => {
     },
     {
       label: "Resorts",
+      id: "resort",
       dropdown: ResortAlias.map(([key, value]) => {
         return (
           <Option key={key} value={value}>
@@ -175,6 +238,7 @@ export const SearchFormLayout = () => {
     },
     {
       label: "Use Year",
+      id: "useYear",
       dropdown: UseYearAlias.map(([key, value]) => {
         return (
           <Option key={key} value={value}>
@@ -185,6 +249,7 @@ export const SearchFormLayout = () => {
     },
     {
       label: "Status",
+      id: "status",
       dropdown: StatusAlias.map(([key, value]) => {
         return (
           <Option key={key} value={value}>
@@ -207,7 +272,7 @@ export const SearchFormLayout = () => {
               placeholder="Select or Input"
               optionLabelProp="key"
               optionFilterProp="key"
-              onChange={handleChange}
+              onChange={(value) => handleDropdownChange(x.id, value)}
               tokenSeparators={[","]}
               allowClear
               bordered
@@ -232,7 +297,9 @@ export const SearchFormLayout = () => {
         <Select
           defaultValue="broker"
           style={{ width: 120 }}
-          onChange={handleChange}
+          onChange={(value) => {
+            handleDropdownChange("sidx", value);
+          }}
         >
           <Option value="id">Id</Option>
           <Option value="broker">Broker</Option>
@@ -247,7 +314,9 @@ export const SearchFormLayout = () => {
         <Select
           defaultValue="ASC"
           style={{ width: 120 }}
-          onChange={handleChange}
+          onChange={(value) => {
+            handleDropdownChange("sord", value);
+          }}
         >
           <Option value="ASC">Ascending</Option>
           <Option value="DESC">Descending</Option>
@@ -267,14 +336,16 @@ export const SearchFormLayout = () => {
         <Select
           defaultValue="broker"
           style={{ width: 120 }}
-          onChange={handleChange}
+          onChange={(value) => {
+            handleDropdownChange("ipp", value);
+          }}
         >
-          <Option value="id">5</Option>
-          <Option value="broker">10</Option>
-          <Option value="resort">15</Option>
-          <Option value="points">20</Option>
-          <Option value="useYear">30</Option>
-          <Option value="price">50</Option>
+          <Option value="5">5</Option>
+          <Option value="10">10</Option>
+          <Option value="15">15</Option>
+          <Option value="20">20</Option>
+          <Option value="30">30</Option>
+          <Option value="50">50</Option>
         </Select>
       </div>
     </Space>
@@ -287,13 +358,25 @@ export const SearchFormLayout = () => {
   const moreOptionsMarkup = (
     <Space direction="vertical" size="middle">
       <div>
-        <Checkbox onChange={handleChange}>Include defective data</Checkbox>
+        <Checkbox
+          onChange={(value) => {
+            handleDropdownChange("idd", value);
+          }}
+        >
+          Include defective data
+        </Checkbox>
         <p className="SearchForm--OptionComment">
           Includes data that has some information missing or undefined.
         </p>
       </div>
       <div>
-        <Checkbox onChange={handleChange}>Submit on change</Checkbox>
+        <Checkbox
+          onChange={(value) => {
+            console.log(value);
+          }}
+        >
+          Submit on change
+        </Checkbox>
         <p className="SearchForm--OptionComment">
           If selected search will occur every time one of the fields is changed.
         </p>

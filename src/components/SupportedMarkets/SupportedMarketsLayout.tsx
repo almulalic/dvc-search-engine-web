@@ -11,6 +11,7 @@ export const SupportedMarketsLayout = () => {
       {BrokerAlias.map((broker, id) => {
         return (
           <CustomCard
+            key={id}
             title={broker[0]}
             img={`dvccard${id + 1}`}
             description={BrokerDescriptions[broker[1]]}
