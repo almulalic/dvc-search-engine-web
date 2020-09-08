@@ -1,3 +1,5 @@
+import { URLAlias } from "./Types";
+
 export const decodeCamelCase = (label) => {
   let _decodedString;
 
@@ -8,6 +10,6 @@ export const decodeCamelCase = (label) => {
 
 export const serializeURL = (filters) => {
   return Object.entries(filters)
-    .map(([key, val]) => `${key}=${val}`)
+    .map(([key, val]) => `${URLAlias.get(key)}=${val}`)
     .join("&");
 };

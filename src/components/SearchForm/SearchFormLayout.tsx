@@ -6,6 +6,8 @@ import {
   SaveTwoTone,
   CopyTwoTone,
   RightOutlined,
+  FolderOpenOutlined,
+  DollarCircleOutlined,
 } from "@ant-design/icons";
 
 import {
@@ -26,6 +28,7 @@ import {
   Input,
   Steps,
   List,
+  Collapse,
 } from "antd";
 
 import "./SearchFormStyle.scss";
@@ -40,15 +43,16 @@ import {
   StatusTypes,
 } from "../../shared/Types";
 import Cookies from "universal-cookie";
-import { SaveModalInnerMarkup } from "./SaveModalInnerMarkup";
+import { SaveModalInnerMarkup } from "./SaveModalInnerMarkup/SaveModalInnerMarkup";
 import { decodeCamelCase, serializeURL } from "../../shared/Utils";
 import { BrokerTypes } from "./../../shared/Types";
 import { CopyToClipboard } from "react-copy-to-clipboard";
+import { OpenModalInnerMarkup } from "./SaveModalInnerMarkup/OpenModalInnerMarkup";
 
 const { Countdown } = Statistic;
 const { Text, Title } = Typography;
 const { Option } = Select;
-const { Search } = Input;
+const { Panel } = Collapse;
 
 const cookies = new Cookies();
 
@@ -60,15 +64,15 @@ export const SearchFormLayout = () => {
     resort: [],
     useYear: [],
     status: [],
+    pointsRange: [0, 100],
+    pricePerPointRange: [0, 100],
+    idInput: "",
     sidx: "Broker",
     sord: "Ascending",
-    id: "",
-    points: [0, 100],
-    pricePerPoint: [0, 100],
     itemsPerPage: 5,
-    currentPage: 1,
     includeDefectiveData: false,
     submitOnChange: false,
+    currentPage: 1,
   });
 
   //#region Counter
@@ -91,6 +95,7 @@ export const SearchFormLayout = () => {
 
   useEffect(() => {
     let rawFilters = cookies.get("filters");
+
     if (rawFilters) setSavedFilters(rawFilters);
     else cookies.set("filters", JSON.stringify([]));
   }, []);
@@ -99,6 +104,7 @@ export const SearchFormLayout = () => {
     <Modal
       visible={saveModalVisible}
       title="Save Filters"
+      width="50%"
       onCancel={() => setSaveModalVisible(false)}
       footer={[
         <Button key="back" onClick={() => setSaveModalVisible(false)}>
@@ -120,7 +126,34 @@ export const SearchFormLayout = () => {
     </Modal>
   );
 
-  // Copy
+  // Open
+
+  const [openModalVisible, setOpenModalVisible] = useState(false);
+
+  const openFilterModalMarkup = (
+    <Modal
+      visible={openModalVisible}
+      title="Open Filters"
+      onCancel={() => setOpenModalVisible(false)}
+      footer={[
+        <Button key="back" onClick={() => setOpenModalVisible(false)}>
+          Return
+        </Button>,
+        <Button
+          key="submit"
+          type="primary"
+          onClick={() => {
+            if (validateAndSave(saveInput, saveInput, savedFilters, filters))
+              setOpenModalVisible(false);
+          }}
+        >
+          Open
+        </Button>,
+      ]}
+    >
+      <OpenModalInnerMarkup savedFilters={savedFilters} />
+    </Modal>
+  );
 
   const searchFormHeaderMarkup = (
     <div className="SearchForm--Header">
@@ -161,9 +194,24 @@ export const SearchFormLayout = () => {
             onClick={() => setSaveModalVisible(true)}
           />
         </Tooltip>
+        <Tooltip title="Open saved filters." placement="bottom">
+          <Button
+            type="primary"
+            icon={<FolderOpenOutlined />}
+            size="middle"
+            onClick={() => setOpenModalVisible(true)}
+          />
+        </Tooltip>
+        {/* <Button
+          type="primary"
+          icon={<SettingOutlined />}
+          size="middle"
+          onClick={() => setOpenModalVisible(true)}
+        /> */}
       </div>
 
       {saveFilterModalMarkup}
+      {openFilterModalMarkup}
     </div>
   );
 
@@ -306,14 +354,37 @@ export const SearchFormLayout = () => {
     <Row gutter={24}>
       <Col span={24}>
         <div className="SearchForm--SelectContainer">
-          <Title level={5}>Points ($)</Title>
-          <Slider range defaultValue={[20, 50]} />
+          <Title level={5}>Points [ P ]</Title>
+          <Slider
+            className="SearchForm--Slider"
+            range
+            defaultValue={[20, 50]}
+          />
         </div>
       </Col>
       <Col span={24}>
         <div className="SearchForm--SelectContainer">
-          <Title level={5}>Price per Point ($)</Title>
-          <Slider range defaultValue={[20, 50]} />
+          <Title level={5}>
+            Price [ <DollarCircleOutlined /> ]
+          </Title>
+          <Slider
+            className="SearchForm--Slider"
+            range
+            defaultValue={[20, 50]}
+          />
+        </div>
+      </Col>
+      <Col span={24}>
+        <div className="SearchForm--SelectContainer">
+          <Title level={5}>
+            Price per Point [ P/
+            <DollarCircleOutlined /> ]
+          </Title>
+          <Slider
+            className="SearchForm--Slider"
+            range
+            defaultValue={[20, 50]}
+          />
         </div>
       </Col>
     </Row>
@@ -326,7 +397,7 @@ export const SearchFormLayout = () => {
   const idSearchFieldMarkup = (
     <div className="SearchForm--SelectContainer">
       <Title level={5}>ID</Title>
-      <Input placeholder="Input ID" />
+      <Input placeholder="Input ID" size="large" />
     </div>
   );
 
@@ -341,7 +412,7 @@ export const SearchFormLayout = () => {
       align="middle"
       className="SearchForm--OutputSettings"
     >
-      <Col xs={24} sm={24} md={12} lg={8}>
+      <Col xs={24} sm={24} md={12} lg={12} xl={12} xxl={12}>
         <div className="SearchForm--SelectContainer">
           <Title level={5}>Sort By</Title>
           <Select
@@ -360,7 +431,7 @@ export const SearchFormLayout = () => {
           </Select>
         </div>
       </Col>
-      <Col xs={24} sm={24} md={12} lg={8}>
+      <Col xs={24} sm={24} md={12} lg={12} xl={12} xxl={12}>
         <div className="SearchForm--SelectContainer">
           <Title level={5}>Order</Title>
           <Select
@@ -375,7 +446,7 @@ export const SearchFormLayout = () => {
           </Select>
         </div>
       </Col>
-      <Col xs={24} sm={24} md={12} lg={8} xl={24} xxl={12}>
+      <Col xs={24} sm={24} md={12} lg={12} xl={24} xxl={12}>
         <div className="SearchForm--SelectContainer">
           <Title level={5}>Items per page</Title>
           <Select
@@ -425,9 +496,6 @@ export const SearchFormLayout = () => {
         >
           Include defective data
         </Checkbox>
-        <p className="SearchForm--OptionComment">
-          Includes data that has some information missing or undefined.
-        </p>
       </div>
       <div className="SearchForm--Checkbox">
         <Checkbox
@@ -438,7 +506,8 @@ export const SearchFormLayout = () => {
           Submit on change
         </Checkbox>
         <p className="SearchForm--OptionComment">
-          If selected search will occur every time one of the fields is changed.
+          If selected, search will occur every time one of the fields is
+          changed.
         </p>
       </div>
       <div>{searchButtonMarkup}</div>
@@ -457,11 +526,11 @@ export const SearchFormLayout = () => {
       >
         <Row gutter={24} justify="center">
           <Col lg={24} xl={12} xxl={12}>
+            {idSearchFieldMarkup}
             {dropdownsMarkup}
-            {slidersMarkup}
           </Col>
           <Col lg={24} xl={12} xxl={12}>
-            {idSearchFieldMarkup}
+            {slidersMarkup}
             {outputSettingsMarkup}
             {moreOptionsMarkup}
           </Col>

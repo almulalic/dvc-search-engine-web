@@ -1,12 +1,11 @@
 import React, { useState } from "react";
-import { Space, Typography, Input, List, message } from "antd";
+import { Space, Typography, Input, List, Collapse } from "antd";
 import {
   BrokerTypes,
   ResortTypes,
   UseYearTypes,
   StatusTypes,
-} from "../../shared/Types";
-import { SaveOutlined } from "@ant-design/icons";
+} from "../../../shared/Types";
 
 const { Title, Text } = Typography;
 
@@ -66,18 +65,19 @@ export const SaveModalInnerMarkup = (
       <List.Item>
         <Text strong>Points:</Text>
         <Text>
-          From {filters.points[0]} to {filters.points[1]}
+          From {filters.pointsRange[0]} to {filters.pointsRange[1]}
         </Text>
       </List.Item>
       <List.Item>
         <Text strong>Price Per Point:</Text>
         <Text>
-          From {filters.pricePerPoint[0]} to {filters.pricePerPoint[1]}
+          From {filters.pricePerPointRange[0]} to{" "}
+          {filters.pricePerPointRange[1]}
         </Text>
       </List.Item>
       <List.Item>
         <Text strong>ID:</Text>
-        <Text>{filters.id.length === 0 ? "-" : filters.id}</Text>
+        <Text>{filters.idInput.length === 0 ? "-" : filters.id}</Text>
       </List.Item>
       <List.Item>
         <Text strong>Sort By:</Text>
@@ -101,7 +101,6 @@ export const SaveModalInnerMarkup = (
       </List.Item>
     </List>
   );
-
   return (
     <Space direction="vertical" size="large">
       {listMarkup}

@@ -11,19 +11,41 @@
 .SearchForm--Header {
   display: flex;
   justify-content: space-between;
+  align-items: center;
 
   .SearchForm--HeaderBlock {
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
+  }
+
+  .SearchForm--HeaderActions {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: baseline;
+
+    button {
+      margin: 0 0.5rem 0 0.5rem;
+    }
   }
 }
 
 .SearchForm--SelectContainer {
   margin-bottom: 1.5vh;
+
+  .ant-select-selection-search-input {
+    overflow-y: scroll !important;
+  }
 }
 
-.SearchForm--Checkbox {
+.SearchForm--Slider {
+  .ant-slider-rail {
+    background: rgba(0, 0, 0, 0.25);
+  }
+
+  .ant-slider-track {
+    background: #1890ff !important;
+  }
 }
 
 .SearchForm--OptionComment {

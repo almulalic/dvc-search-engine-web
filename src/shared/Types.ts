@@ -14,6 +14,22 @@ export const BrokerAlias = [
   ["DVC Resales Shop", 4],
 ];
 
+export const URLAlias = new Map([
+  ["broker", "b"],
+  ["resort", "r"],
+  ["useYear", "uy"],
+  ["status", "s"],
+  ["pointsRange", "p"],
+  ["pricePerPointRange", "ppp"],
+  ["sidx", "idx"],
+  ["sord", "ord"],
+  ["idInput", "id"],
+  ["itemsPerPage", "ipp"],
+  ["includeDefectiveData", "idd"],
+  ["submitOnChange", "soc"],
+  ["currentPage", "cp"],
+]);
+
 export const BrokerDescriptions = {
   0: "DVC Resale Market is the leader in the DVC resales industry with 11 former Guides and 2 former Quality Assurance Managers ready to help you buy or sell Disney Vacation Club resales today!",
   1: "We are a family owned and operated Real Estate Brokerage with over 20 years experience specializing in the DVC resale market. We take pride in being honest, friendly and attentive to your every need so that whether you are buying or selling your Disney points, the process is easy and care-free.",
@@ -23,11 +39,11 @@ export const BrokerDescriptions = {
 };
 
 export const BrokerURL = {
-  0: "https://www.dvcresalemarket.com",
-  1: "https://www.resalesdvc.com",
-  2: "https://www.dvcstore.com",
-  3: "https://http://www.dvcresale.com",
-  4: "https://resales.dvcshop.com",
+  0: "https://www.dvcresalemarket.com/",
+  1: "https://www.resalesdvc.com/",
+  2: "https://www.dvcstore.com/",
+  3: "https://http://www.dvcresale.com/",
+  4: "https://resales.dvcshop.com/",
 };
 
 export const ResortTypes = {
