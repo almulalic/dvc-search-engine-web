@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from "react";
+import numeral from "numeral";
+
 import {
   SearchOutlined,
   SaveOutlined,
@@ -31,6 +33,8 @@ import {
   Collapse,
 } from "antd";
 
+import Skeleton from "react-loading-skeleton";
+
 import "./SearchFormStyle.scss";
 import { calculateTimer, validateAndSave } from "./SearchForm";
 import {
@@ -48,6 +52,8 @@ import { decodeCamelCase, serializeURL } from "../../shared/Utils";
 import { BrokerTypes } from "./../../shared/Types";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import { OpenModalInnerMarkup } from "./SaveModalInnerMarkup/OpenModalInnerMarkup";
+import { baseSearchURL, baseAuthURL } from "../../shared/Shared";
+import axios from "axios";
 
 const { Countdown } = Statistic;
 const { Text, Title } = Typography;
@@ -57,7 +63,39 @@ const { Panel } = Collapse;
 const cookies = new Cookies();
 
 export const SearchFormLayout = () => {
-  const baseURL = "https://localhost:3000/allListings?filters=";
+  //#region Overview
+
+  const isLanding = window.location.href.includes("allListings");
+
+  const [overview, setOverview] = useState({
+    total: 0,
+    valid: 0,
+    points: [0, 0],
+    price: [0, 0],
+    pricePerPoint: [0, 0],
+  });
+
+  const [isFetchingOverview, setIsFetchingOverview] = useState(true);
+
+  const fetchOverview = () => {
+    axios
+      .get(baseAuthURL + "/search/overview")
+      .then((res) => {
+        setOverview(res.data);
+        setIsFetchingOverview(false);
+      })
+      .catch((err) => {
+        console.log(err);
+        setIsFetchingOverview(false);
+      });
+  };
+
+  useEffect(() => {
+    setIsFetchingOverview(true);
+    fetchOverview();
+  }, []);
+
+  //#endregion
 
   const [filters, setFilters] = useState({
     broker: [],
@@ -65,6 +103,7 @@ export const SearchFormLayout = () => {
     useYear: [],
     status: [],
     pointsRange: [0, 100],
+    priceRange: [0, 100],
     pricePerPointRange: [0, 100],
     idInput: "",
     sidx: "Broker",
@@ -161,8 +200,13 @@ export const SearchFormLayout = () => {
         <Title className="SearchForm--HeaderTitle " level={3}>
           Search
         </Title>
+
         <Text className="SearchForm--HeaderSubtitle" type="secondary">
-          1093 properties available!
+          {isFetchingOverview ? (
+            <Skeleton />
+          ) : (
+            `${overview.total} (${overview.valid} valid) properties available!  `
+          )}
         </Text>
       </div>
       <div className="SearchForm--HeaderBlock SearchForm--HeaderCountdown">
@@ -180,7 +224,7 @@ export const SearchFormLayout = () => {
       <div className="SearchForm--HeaderBlock SearchForm--HeaderActions">
         <Tooltip title="Copy search form to clipboard.">
           <CopyToClipboard
-            text={baseURL + serializeURL(filters)}
+            text={baseSearchURL + serializeURL(filters)}
             onCopy={() => message.success("Successfully copied to clipboard!")}
           >
             <Button type="primary" icon={<CopyOutlined />} size="middle" />
@@ -219,8 +263,13 @@ export const SearchFormLayout = () => {
 
   //#region Dropdowns
 
-  const handleDropdownChange = (key, value) => {
-    if (key === "broker")
+  const handleFilterChange = (key, value) => {
+    if (key === "id")
+      setFilters({
+        ...filters,
+        idInput: value,
+      });
+    else if (key === "broker")
       setFilters({
         ...filters,
         broker: value,
@@ -240,15 +289,30 @@ export const SearchFormLayout = () => {
         ...filters,
         status: value,
       });
-    else if (key === "sidx")
+    else if (key === "points")
       setFilters({
         ...filters,
-        sidx: value,
+        pointsRange: value,
+      });
+    else if (key === "price")
+      setFilters({
+        ...filters,
+        priceRange: value,
+      });
+    else if (key === "ppp")
+      setFilters({
+        ...filters,
+        pricePerPointRange: value,
       });
     else if (key === "sord")
       setFilters({
         ...filters,
         sord: value,
+      });
+    else if (key === "sidx")
+      setFilters({
+        ...filters,
+        sidx: value,
       });
     else if (key === "ipp")
       setFilters({
@@ -331,7 +395,7 @@ export const SearchFormLayout = () => {
                 placeholder="Select or Input"
                 optionLabelProp="key"
                 optionFilterProp="key"
-                onChange={(value) => handleDropdownChange(x.id, value)}
+                onChange={(value) => handleFilterChange(x.id, value)}
                 tokenSeparators={[","]}
                 allowClear
                 bordered
@@ -354,37 +418,86 @@ export const SearchFormLayout = () => {
     <Row gutter={24}>
       <Col span={24}>
         <div className="SearchForm--SelectContainer">
-          <Title level={5}>Points [ P ]</Title>
-          <Slider
-            className="SearchForm--Slider"
-            range
-            defaultValue={[20, 50]}
-          />
+          <Title level={5}>
+            Points [
+            <span className="SearchForm--RangeLables">
+              {numeral(overview.price[0]).format("0,0[.]00")} {" P - "}
+              {numeral(overview.price[1]).format("0,0[.]00")} P
+            </span>
+            ]
+          </Title>
+          {isFetchingOverview ? (
+            <Skeleton />
+          ) : (
+            <Slider
+              className="SearchForm--Slider"
+              range
+              defaultValue={[overview.points[1] / 3, overview.points[1] / 1.5]}
+              min={overview.points[0]}
+              max={overview.points[1]}
+              tipFormatter={(value) => {
+                return `${value} P`;
+              }}
+              onChange={(value) => handleFilterChange("points", value)}
+            />
+          )}
         </div>
       </Col>
       <Col span={24}>
         <div className="SearchForm--SelectContainer">
           <Title level={5}>
-            Price [ <DollarCircleOutlined /> ]
+            Price [{" "}
+            <span className="SearchForm--RangeLables">
+              {numeral(overview.price[0]).format("0,0[.]00 $")} {" - "}
+              {numeral(overview.price[1]).format("0,0[.]00 $")}
+            </span>
+            ]
           </Title>
-          <Slider
-            className="SearchForm--Slider"
-            range
-            defaultValue={[20, 50]}
-          />
+          {isFetchingOverview ? (
+            <Skeleton />
+          ) : (
+            <Slider
+              className="SearchForm--Slider"
+              range
+              defaultValue={[overview.price[1] / 3, overview.price[1] / 1.5]}
+              min={overview.price[0]}
+              max={overview.price[1]}
+              tipFormatter={(value) => {
+                return `${value} $`;
+              }}
+              onChange={(value) => handleFilterChange("price", value)}
+            />
+          )}
         </div>
       </Col>
       <Col span={24}>
         <div className="SearchForm--SelectContainer">
           <Title level={5}>
-            Price per Point [ P/
-            <DollarCircleOutlined /> ]
+            Price per Point [
+            <span className="SearchForm--RangeLables">
+              {numeral(overview.pricePerPoint[0]).format("0,0[.]00 ")} {"P - "}
+              {numeral(overview.pricePerPoint[1]).format("0,0[.]00 $")}
+            </span>
+            ]
           </Title>
-          <Slider
-            className="SearchForm--Slider"
-            range
-            defaultValue={[20, 50]}
-          />
+          {isFetchingOverview ? (
+            <Skeleton />
+          ) : (
+            <Slider
+              className="SearchForm--Slider"
+              range
+              defaultValue={[
+                overview.pricePerPoint[1] / 3,
+                overview.pricePerPoint[1] / 1.5,
+              ]}
+              min={overview.pricePerPoint[0]}
+              max={overview.pricePerPoint[1]}
+              tipFormatter={(value) => {
+                return `${value} P/$`;
+              }}
+              onChange={(value) => handleFilterChange("ppp", value)}
+            />
+          )}
         </div>
       </Col>
     </Row>
@@ -397,7 +510,11 @@ export const SearchFormLayout = () => {
   const idSearchFieldMarkup = (
     <div className="SearchForm--SelectContainer">
       <Title level={5}>ID</Title>
-      <Input placeholder="Input ID" size="large" />
+      <Input
+        placeholder="Input ID"
+        size="large"
+        onChange={(e) => handleFilterChange("id", e.target.value)}
+      />
     </div>
   );
 
@@ -419,7 +536,7 @@ export const SearchFormLayout = () => {
             defaultValue="broker"
             style={{ width: 120 }}
             onChange={(value) => {
-              handleDropdownChange("sidx", value);
+              handleFilterChange("sidx", value);
             }}
           >
             <Option value="id">Id</Option>
@@ -438,7 +555,7 @@ export const SearchFormLayout = () => {
             defaultValue="ASC"
             style={{ width: 120 }}
             onChange={(value) => {
-              handleDropdownChange("sord", value);
+              handleFilterChange("sord", value);
             }}
           >
             <Option value="ASC">Ascending</Option>
@@ -453,7 +570,7 @@ export const SearchFormLayout = () => {
             defaultValue="10"
             style={{ width: 120 }}
             onChange={(value) => {
-              handleDropdownChange("ipp", value);
+              handleFilterChange("ipp", value);
             }}
           >
             <Option value="5">5</Option>
@@ -471,9 +588,16 @@ export const SearchFormLayout = () => {
   //#endregion
 
   //#region Search
+  const [submitOnChange, setSubmitOnChange] = useState(false);
 
   const searchButtonMarkup = (
-    <Button type="primary" icon={<SearchOutlined />} size="middle" block>
+    <Button
+      type="primary"
+      icon={<SearchOutlined />}
+      size="middle"
+      disabled={submitOnChange || !isLanding}
+      block
+    >
       Search
     </Button>
   );
@@ -490,21 +614,36 @@ export const SearchFormLayout = () => {
     >
       <div className="SearchForm--Checkbox">
         <Checkbox
-          onChange={(value) => {
-            handleDropdownChange("idd", value);
+          onChange={(e) => {
+            console.log(e);
+            handleFilterChange("idd", e.target.checked);
           }}
+          defaultChecked
         >
           Include defective data
         </Checkbox>
+        <p className="SearchForm--OptionComment">
+          Includes data that has some information missing or undefined.
+        </p>
       </div>
       <div className="SearchForm--Checkbox">
-        <Checkbox
-          onChange={(value) => {
-            console.log(value);
-          }}
-        >
-          Submit on change
-        </Checkbox>
+        {isLanding ? (
+          <Tooltip title="Only available on all listings page!">
+            <Checkbox defaultChecked={isLanding} disabled={isLanding}>
+              Submit on change
+            </Checkbox>
+          </Tooltip>
+        ) : (
+          <Checkbox
+            onChange={(e) => {
+              setSubmitOnChange(e.target.checked);
+            }}
+            defaultChecked={isLanding}
+            disabled={isLanding}
+          >
+            Submit on change
+          </Checkbox>
+        )}
         <p className="SearchForm--OptionComment">
           If selected, search will occur every time one of the fields is
           changed.
