@@ -62,10 +62,10 @@ const { Panel } = Collapse;
 
 const cookies = new Cookies();
 
-export const SearchFormLayout = () => {
+export const SearchFormLayout = ({ setBody } = this.props) => {
   //#region Overview
 
-  const isLanding = window.location.href.includes("allListings");
+  const isAllListings = window.location.href.includes("allListings");
 
   const [overview, setOverview] = useState({
     total: 0,
@@ -113,6 +113,10 @@ export const SearchFormLayout = () => {
     submitOnChange: false,
     currentPage: 1,
   });
+
+  useEffect(() => {
+    setBody(filters);
+  }, []);
 
   //#region Counter
 
@@ -446,7 +450,7 @@ export const SearchFormLayout = () => {
       <Col span={24}>
         <div className="SearchForm--SelectContainer">
           <Title level={5}>
-            Price [{" "}
+            Price [
             <span className="SearchForm--RangeLables">
               {numeral(overview.price[0]).format("0,0[.]00 $")} {" - "}
               {numeral(overview.price[1]).format("0,0[.]00 $")}
@@ -587,7 +591,7 @@ export const SearchFormLayout = () => {
 
   //#endregion
 
-  //#region Search
+  //#region Search Button
   const [submitOnChange, setSubmitOnChange] = useState(false);
 
   const searchButtonMarkup = (
@@ -595,7 +599,7 @@ export const SearchFormLayout = () => {
       type="primary"
       icon={<SearchOutlined />}
       size="middle"
-      disabled={submitOnChange || !isLanding}
+      disabled={isAllListings ? submitOnChange : true}
       block
     >
       Search
@@ -627,9 +631,9 @@ export const SearchFormLayout = () => {
         </p>
       </div>
       <div className="SearchForm--Checkbox">
-        {isLanding ? (
+        {!isAllListings ? (
           <Tooltip title="Only available on all listings page!">
-            <Checkbox defaultChecked={isLanding} disabled={isLanding}>
+            <Checkbox defaultChecked={!isAllListings} disabled={!isAllListings}>
               Submit on change
             </Checkbox>
           </Tooltip>
@@ -638,8 +642,8 @@ export const SearchFormLayout = () => {
             onChange={(e) => {
               setSubmitOnChange(e.target.checked);
             }}
-            defaultChecked={isLanding}
-            disabled={isLanding}
+            defaultChecked={!isAllListings}
+            disabled={!isAllListings}
           >
             Submit on change
           </Checkbox>

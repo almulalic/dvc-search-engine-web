@@ -1,6 +1,6 @@
 import React from "react";
 import "./App.scss";
-import { Landing } from "./pages";
+import { Landing, AllListings } from "./pages";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import Cookies from "universal-cookie";
 
@@ -11,6 +11,7 @@ const App = () => {
         <Switch>
           <Route exact path="/" component={Landing} />
           <Route exact path="/landing" component={Landing} />
+          <Route exact path="/allListings" component={AllListings} />
           <Route path="/" component={Landing} /> {/* 404 */}
         </Switch>
       </Router>
