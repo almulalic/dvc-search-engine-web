@@ -22,7 +22,7 @@ export const AllListingsLayout = () => {
     idInput: "",
     sidx: "Broker",
     sord: "Ascending",
-    itemsPerPage: 5,
+    itemsPerPage: 10,
     includeDefectiveData: false,
     submitOnChange: false,
     currentPage: 1,

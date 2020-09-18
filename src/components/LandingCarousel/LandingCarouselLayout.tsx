@@ -1,4 +1,5 @@
 import React from "react";
+import { useHistory } from "react-router-dom";
 
 import { Carousel, Image, Button, Typography } from "antd";
 
@@ -11,6 +12,8 @@ import "./LandingCarouselStyle.scss";
 const { Title } = Typography;
 
 export const LandingCarouselLayout = () => {
+  let history = useHistory();
+
   return (
     <div className="Carousel">
       <Carousel dotPosition="top" effect="scrollx" autoplay>
@@ -35,7 +38,11 @@ export const LandingCarouselLayout = () => {
             The only DVC Resale Search Engine that you will ever need
           </Title>
         </div>
-        <Button className="Carousel--ViewListingsButton" shape="round">
+        <Button
+          className="Carousel--ViewListingsButton"
+          shape="round"
+          onClick={() => history.push("/allListings")}
+        >
           View Listings
         </Button>
       </div>

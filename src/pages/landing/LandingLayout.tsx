@@ -13,6 +13,23 @@ import { CookiesNotificationLayout } from "../../components/CookiesNotification/
 export const LandingLayout = () => {
   const { Header, Footer, Sider, Content } = Layout;
 
+  const [body, setBody] = useState({
+    broker: [],
+    resort: [],
+    useYear: [],
+    status: [],
+    pointsRange: [0, 100],
+    priceRange: [0, 100],
+    pricePerPointRange: [0, 100],
+    idInput: "",
+    sidx: "Broker",
+    sord: "Ascending",
+    itemsPerPage: 5,
+    includeDefectiveData: false,
+    submitOnChange: false,
+    currentPage: 1,
+  });
+
   return (
     <div className="LandingPage">
       <Layout>
@@ -20,7 +37,7 @@ export const LandingLayout = () => {
           <LandingCarousel />
         </div>
         <div className="LandingPage--SearchForm">
-          <SearchForm />
+          <SearchForm setBody={setBody} />
         </div>
         {/* <div className="LandingPage--SupportedMarkets">
           <SupportedMarkets />

@@ -62,7 +62,7 @@ const { Panel } = Collapse;
 
 const cookies = new Cookies();
 
-export const SearchFormLayout = ({ setBody } = this.props) => {
+export const SearchFormLayout = ({ setBody }) => {
   //#region Overview
 
   const isAllListings = window.location.href.includes("allListings");
@@ -599,7 +599,7 @@ export const SearchFormLayout = ({ setBody } = this.props) => {
       type="primary"
       icon={<SearchOutlined />}
       size="middle"
-      disabled={isAllListings ? submitOnChange : true}
+      disabled={isAllListings && submitOnChange}
       block
     >
       Search

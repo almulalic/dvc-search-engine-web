@@ -1,24 +1,28 @@
 import React from "react";
+import { BrokerTypes, ResortTypes, StatusTypes, UseYearTypes } from "./Types";
 
 export const TableColumns = [
   {
     title: "Id",
     dataIndex: "id",
+    render: (text) => <span style={{ fontWeight: "bold" }}> {text}</span>,
   },
   {
     title: "Broker",
     dataIndex: "broker",
+    render: (val) => <span>{BrokerTypes[val]}</span>,
   },
   {
     title: "Resort",
     dataIndex: "resort",
+    render: (val) => <span>{ResortTypes[val]}</span>,
   },
   {
     title: "Price",
     dataIndex: "price",
     render: (text) => (
       <span style={{ display: "flex" }}>
-        {text} <span style={{ fontWeight: "bold" }}>$</span>
+        {text} <span style={{ fontWeight: "bold" }}> $</span>
       </span>
     ),
   },
@@ -36,18 +40,20 @@ export const TableColumns = [
   {
     title: "Point Availability",
     dataIndex: "pointAvailability",
+    ellipsis: true,
+    render: (text) => (
+      <span className="AllListings--PointAvailablity">{text}</span>
+    ),
   },
   {
     title: "Use Year",
     dataIndex: "useYear",
+    render: (val) => <span>{UseYearTypes[val]}</span>,
   },
   {
     title: "Status",
     dataIndex: "status",
-  },
-  {
-    title: "Href",
-    dataIndex: "href",
+    render: (val) => <span>{StatusTypes[val]}</span>,
   },
 ];
 
