@@ -108,7 +108,7 @@ export const SearchFormLayout = ({ setBody }) => {
     idInput: "",
     sidx: "Broker",
     sord: "Ascending",
-    itemsPerPage: 5,
+    itemsPerPage: 10,
     includeDefectiveData: false,
     submitOnChange: false,
     currentPage: 1,
@@ -116,7 +116,7 @@ export const SearchFormLayout = ({ setBody }) => {
 
   useEffect(() => {
     setBody(filters);
-  }, []);
+  }, [filters]);
 
   //#region Counter
 

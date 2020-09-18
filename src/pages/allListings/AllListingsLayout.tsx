@@ -53,7 +53,6 @@ export const AllListingsLayout = () => {
         });
 
         setListingsData(adaptedData);
-
         setIsFetchingData(false);
       })
       .catch((err) => {
@@ -79,7 +78,7 @@ export const AllListingsLayout = () => {
           showHeader
           dataSource={isFetchingData ? emptyData : listingsData}
           pagination={{ position: ["bottomCenter"] }}
-          columns={TableColumns}
+          columns={TableColumns(setBody)}
           loading={isFetchingData}
         />
       </div>

@@ -12,5 +12,13 @@
 
 .AllListings--Table {
   background-image: url("../../assets/images/Test/gray.jpg");
-  padding: 0px 7vw 0px 7vw;
+  padding: 5vh 7vw 0px 7vw;
+}
+
+.ant-table-thead {
+  .ant-table-cell {
+    background: #40a9ff;
+    color: white;
+    font-weight: bold;
+  }
 }
