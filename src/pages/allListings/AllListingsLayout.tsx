@@ -5,8 +5,8 @@ import axios from "axios";
 
 import "./AllListingsStyle.scss";
 import { baseAuthURL } from "../../shared/Shared";
-import { Table, Empty } from "antd";
-import { TableColumns, EmptyData } from "../../shared/TableUtils";
+import { Table, Empty, message } from "antd";
+import { EmptyData, TableColumns } from "../../shared/TableUtils";
 
 export const AllListingsLayout = () => {
   const [emptyData, setEmptyData] = useState([]);
@@ -16,9 +16,9 @@ export const AllListingsLayout = () => {
     resort: [],
     useYear: [],
     status: [],
-    pointsRange: [0, 100],
-    priceRange: [0, 100],
-    pricePerPointRange: [0, 100],
+    pointsRange: [null, null],
+    priceRange: [null, null],
+    pricePerPointRange: [null, null],
     idInput: "",
     sidx: "Broker",
     sord: "Ascending",
@@ -43,9 +43,9 @@ export const AllListingsLayout = () => {
             resort: record.resort,
             price: record.price,
             points: record.points,
-            pricePerPoint: record.priceperpoint,
-            pointAvailability: record.pointavailability,
-            useYear: record.useyear,
+            pricePerPoint: record.pricePerPoint,
+            pointAvailability: record.pointAvailability,
+            useYear: record.useYear,
             status: record.status,
             href: record.href,
             broker: record.broker,
@@ -64,13 +64,18 @@ export const AllListingsLayout = () => {
   useEffect(() => {
     setIsFetchingData(true);
     fetchListings(body);
-    setEmptyData(EmptyData(body.itemsPerPage));
   }, [body]);
+
+  const noUrlMessage = () => {
+    message.info(
+      "Unfortunatley, there is no URL link available for this property."
+    );
+  };
 
   return (
     <div className="AllListings">
       <div className="AllListings--SearchForm">
-        <SearchForm setBody={setBody} />
+        <SearchForm setExternalFilters={setBody} />
       </div>
       <div className="AllListings--Table">
         <Table
@@ -78,8 +83,19 @@ export const AllListingsLayout = () => {
           showHeader
           dataSource={isFetchingData ? emptyData : listingsData}
           pagination={{ position: ["bottomCenter"] }}
-          columns={TableColumns(setBody)}
+          columns={TableColumns}
           loading={isFetchingData}
+          className="AllListings--Table"
+          rowClassName="AllListings--Table-Row"
+          onRow={(record, rowIndex) => {
+            return {
+              onClick: (event) => {
+                return record.href
+                  ? window.open(record.href, "_blank")
+                  : noUrlMessage();
+              },
+            };
+          }}
         />
       </div>
     </div>

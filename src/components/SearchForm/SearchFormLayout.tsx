@@ -62,7 +62,7 @@ const { Panel } = Collapse;
 
 const cookies = new Cookies();
 
-export const SearchFormLayout = ({ setBody }) => {
+export const SearchFormLayout = ({ setExternalFilters }) => {
   //#region Overview
 
   const isAllListings = window.location.href.includes("allListings");
@@ -102,20 +102,20 @@ export const SearchFormLayout = ({ setBody }) => {
     resort: [],
     useYear: [],
     status: [],
-    pointsRange: [0, 100],
-    priceRange: [0, 100],
-    pricePerPointRange: [0, 100],
+    pointsRange: [null, null],
+    priceRange: [null, null],
+    pricePerPointRange: [null, null],
     idInput: "",
     sidx: "Broker",
     sord: "Ascending",
-    itemsPerPage: 10,
+    itemsPerPage: 1000,
     includeDefectiveData: false,
     submitOnChange: false,
     currentPage: 1,
   });
 
   useEffect(() => {
-    setBody(filters);
+    setExternalFilters(filters);
   }, [filters]);
 
   //#region Counter
@@ -442,7 +442,7 @@ export const SearchFormLayout = ({ setBody }) => {
               tipFormatter={(value) => {
                 return `${value} P`;
               }}
-              onChange={(value) => handleFilterChange("points", value)}
+              onAfterChange={(value) => handleFilterChange("points", value)}
             />
           )}
         </div>
@@ -469,7 +469,7 @@ export const SearchFormLayout = ({ setBody }) => {
               tipFormatter={(value) => {
                 return `${value} $`;
               }}
-              onChange={(value) => handleFilterChange("price", value)}
+              onAfterChange={(value) => handleFilterChange("price", value)}
             />
           )}
         </div>
@@ -499,7 +499,7 @@ export const SearchFormLayout = ({ setBody }) => {
               tipFormatter={(value) => {
                 return `${value} P/$`;
               }}
-              onChange={(value) => handleFilterChange("ppp", value)}
+              onAfterChange={(value) => handleFilterChange("ppp", value)}
             />
           )}
         </div>
