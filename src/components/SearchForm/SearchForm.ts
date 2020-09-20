@@ -36,7 +36,7 @@ export const validateAndSave = (value, saveInput, _savedFilters, _filters) => {
 
   _savedFilters.push({ name: saveInput, filters: _filters });
 
-  cookies.set("filters", JSON.stringify(_savedFilters));
+  localStorage.setItem("filters", JSON.stringify(_savedFilters));
   message.success(
     "You have successfully saved " + saveInput + " filter layout!"
   );

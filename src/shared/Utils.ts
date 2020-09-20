@@ -1,4 +1,5 @@
 import { URLAlias } from "./Types";
+import { useLocation } from "react-router-dom";
 
 export const decodeCamelCase = (label) => {
   let _decodedString;
@@ -12,4 +13,8 @@ export const serializeURL = (filters) => {
   return Object.entries(filters)
     .map(([key, val]) => `${URLAlias.get(key)}=${val}`)
     .join("&");
+};
+
+export const useQuery = () => {
+  return new URLSearchParams(useLocation().search);
 };

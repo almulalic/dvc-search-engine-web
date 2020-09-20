@@ -9,9 +9,7 @@ import {
 
 const { Title, Text } = Typography;
 
-export const SaveModalInnerMarkup = (
-  { filters, setSaveInput } = this.props
-) => {
+export const SaveModalInnerMarkup = ({ filters, setSaveInput }) => {
   const listMarkup = (
     <List header={<Title level={5}>Filter overview</Title>} bordered>
       <List.Item>

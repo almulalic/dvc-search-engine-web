@@ -2,7 +2,7 @@
   position: relative;
   display: flex;
   justify-content: center;
-  padding: 5rem;
+
   align-items: center;
   background-size: cover;
   background-repeat: no-repeat;
@@ -10,11 +10,56 @@
   background-image: url("../../assets/images/Test/26109.jpg");
 }
 
-.AllListings--Table {
+.AllListings {
   background-image: url("../../assets/images/Test/gray.jpg");
-  padding: 5vh 7vw 0px 7vw;
+}
+
+.AllListings--Table {
+  padding: 0px 2vw 0px 2vw;
+
+  table {
+    width: 1400px !important;
+  }
+
+  .AllListings--TableListingText {
+    color: white;
+    text-align: left;
+    font-weight: bold;
+    padding: 2vh 2vw 2vh 2vw;
+    font-size: 16px;
+  }
+}
+.ant-table-cell {
+  min-width: 1000px !important;
 }
 
 .AllListings--Table-Row {
   cursor: pointer;
+}
+
+th {
+  color: white !important;
+  font-weight: bold;
+  letter-spacing: 1px;
+  background: rgb(64, 169, 255) !important;
+  border-right: 1px solid rgba(255, 255, 255, 0.5) !important;
+}
+
+.TableHeader {
+  font-size: 13px;
+}
+
+.ant-table-column-sorter-down {
+  color: white;
+}
+.ant-table-column-sorter-up {
+  color: white;
+}
+
+.ant-table-column-sorter-up.active {
+  color: black;
+}
+
+.ant-table-column-sorter-down.active {
+  color: black;
 }

@@ -1,0 +1,26 @@
+.page-footer {
+  background: #40a9fe;
+  color: white;
+}
+
+.Footer-Link {
+  color: white;
+  margin: 0;
+  padding: 0;
+  font-size: 1.3rem;
+
+  &:hover {
+    color: black;
+  }
+}
+
+.Footer-Credits {
+  font-size: 1.25rem;
+
+  a {
+    color: black;
+    font-weight: bold;
+    text-decoration: underline;
+    margin: 0 10px 0 10px;
+  }
+}

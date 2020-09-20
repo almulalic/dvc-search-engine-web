@@ -1,18 +1,22 @@
 import React from "react";
-import { Typography, List, Collapse } from "antd";
+import { Typography, List, Collapse, Checkbox, Button } from "antd";
 import {
   BrokerTypes,
   ResortTypes,
   UseYearTypes,
   StatusTypes,
 } from "../../../shared/Types";
+import { baseSearchURL } from "../../../shared/Shared";
 
 const { Title, Text } = Typography;
 const { Panel } = Collapse;
 
-export const OpenModalInnerMarkup = ({ savedFilters } = this.props) => {
+export const OpenModalInnerMarkup = ({ savedFilters }) => {
   const listMarkup = (save) => {
     const { name, filters } = save;
+
+    if (!filters) return;
+
     return (
       <List bordered>
         <List.Item>
@@ -110,7 +114,32 @@ export const OpenModalInnerMarkup = ({ savedFilters } = this.props) => {
       <Collapse accordion>
         {savedFilters?.map((save, key) => {
           return (
-            <Panel header={save.name} key={key}>
+            <Panel
+              header={
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                  }}
+                >
+                  <Title level={5} style={{ margin: 0 }}>
+                    {save.name}
+                  </Title>
+                  <Button
+                    type="primary"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      window.location.href =
+                        baseSearchURL + "?" + new URLSearchParams(save.filters);
+                    }}
+                  >
+                    Open
+                  </Button>
+                </div>
+              }
+              key={key}
+            >
               {listMarkup(save)}
             </Panel>
           );

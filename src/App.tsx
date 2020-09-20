@@ -21,7 +21,6 @@ const App = () => {
           </Route>
           <Route exact path="/landing" component={Landing} />
           <Route exact path="/allListings" component={AllListings} />
-          <Route path="/" component={Landing} /> {/* 404 */}
         </Switch>
       </Router>
     </div>

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import numeral from "numeral";
 
 import {
@@ -48,12 +48,13 @@ import {
 } from "../../shared/Types";
 import Cookies from "universal-cookie";
 import { SaveModalInnerMarkup } from "./SaveModalInnerMarkup/SaveModalInnerMarkup";
-import { decodeCamelCase, serializeURL } from "../../shared/Utils";
+import { decodeCamelCase, serializeURL, useQuery } from "../../shared/Utils";
 import { BrokerTypes } from "./../../shared/Types";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import { OpenModalInnerMarkup } from "./SaveModalInnerMarkup/OpenModalInnerMarkup";
 import { baseSearchURL, baseAuthURL } from "../../shared/Shared";
 import axios from "axios";
+import { useHistory } from "react-router-dom";
 
 const { Countdown } = Statistic;
 const { Text, Title } = Typography;
@@ -62,7 +63,7 @@ const { Panel } = Collapse;
 
 const cookies = new Cookies();
 
-export const SearchFormLayout = ({ setExternalFilters }) => {
+export const SearchFormLayout = ({ externalFilters, setExternalFilters }) => {
   //#region Overview
 
   const isAllListings = window.location.href.includes("allListings");
@@ -97,26 +98,15 @@ export const SearchFormLayout = ({ setExternalFilters }) => {
 
   //#endregion
 
-  const [filters, setFilters] = useState({
-    broker: [],
-    resort: [],
-    useYear: [],
-    status: [],
-    pointsRange: [null, null],
-    priceRange: [null, null],
-    pricePerPointRange: [null, null],
-    idInput: "",
-    sidx: "Broker",
-    sord: "Ascending",
-    itemsPerPage: 1000,
-    includeDefectiveData: false,
-    submitOnChange: false,
-    currentPage: 1,
-  });
+  const [filters, setFilters] = useState(externalFilters);
 
   useEffect(() => {
-    setExternalFilters(filters);
+    if (isAllListings && filters.submitOnChange) setExternalFilters(filters);
   }, [filters]);
+
+  const searchWithFilters = (filters) => {
+    setExternalFilters(filters);
+  };
 
   //#region Counter
 
@@ -130,17 +120,16 @@ export const SearchFormLayout = ({ setExternalFilters }) => {
 
   //#region Header
 
-  // Save
+  //#region Save
 
   const [saveInput, setSaveInput] = useState("");
   const [savedFilters, setSavedFilters] = useState([]);
   const [saveModalVisible, setSaveModalVisible] = useState(false);
 
   useEffect(() => {
-    let rawFilters = cookies.get("filters");
+    let rawFilters = localStorage.getItem("filters");
 
-    if (rawFilters) setSavedFilters(rawFilters);
-    else cookies.set("filters", JSON.stringify([]));
+    if (rawFilters !== null) setSavedFilters(JSON.parse(rawFilters));
   }, []);
 
   const saveFilterModalMarkup = (
@@ -169,7 +158,9 @@ export const SearchFormLayout = ({ setExternalFilters }) => {
     </Modal>
   );
 
-  // Open
+  //#endregion
+
+  //#region Open
 
   const [openModalVisible, setOpenModalVisible] = useState(false);
 
@@ -182,21 +173,13 @@ export const SearchFormLayout = ({ setExternalFilters }) => {
         <Button key="back" onClick={() => setOpenModalVisible(false)}>
           Return
         </Button>,
-        <Button
-          key="submit"
-          type="primary"
-          onClick={() => {
-            if (validateAndSave(saveInput, saveInput, savedFilters, filters))
-              setOpenModalVisible(false);
-          }}
-        >
-          Open
-        </Button>,
       ]}
     >
       <OpenModalInnerMarkup savedFilters={savedFilters} />
     </Modal>
   );
+
+  //#endregion
 
   const searchFormHeaderMarkup = (
     <div className="SearchForm--Header">
@@ -228,7 +211,7 @@ export const SearchFormLayout = ({ setExternalFilters }) => {
       <div className="SearchForm--HeaderBlock SearchForm--HeaderActions">
         <Tooltip title="Copy search form to clipboard.">
           <CopyToClipboard
-            text={baseSearchURL + serializeURL(filters)}
+            text={baseSearchURL + "?" + new URLSearchParams(filters)}
             onCopy={() => message.success("Successfully copied to clipboard!")}
           >
             <Button type="primary" icon={<CopyOutlined />} size="middle" />
@@ -242,11 +225,19 @@ export const SearchFormLayout = ({ setExternalFilters }) => {
             onClick={() => setSaveModalVisible(true)}
           />
         </Tooltip>
-        <Tooltip title="Open saved filters." placement="bottom">
+        <Tooltip
+          title={
+            localStorage.getItem("filters") === null
+              ? "No saved available."
+              : "Open saved filters."
+          }
+          placement="bottom"
+        >
           <Button
             type="primary"
             icon={<FolderOpenOutlined />}
             size="middle"
+            disabled={localStorage.getItem("filters") === null}
             onClick={() => setOpenModalVisible(true)}
           />
         </Tooltip>
@@ -333,11 +324,17 @@ export const SearchFormLayout = ({ setExternalFilters }) => {
         ...filters,
         includeDefectiveData: value,
       });
+    else if (key === "soc")
+      setFilters({
+        ...filters,
+        submitOnChange: value,
+      });
+    else if (key === "mcse")
+      setFilters({
+        ...filters,
+        multipleSorterEnabled: value,
+      });
   };
-
-  useEffect(() => {
-    console.log(filters);
-  }, [filters]);
 
   const allDropdownOptions = [
     {
@@ -401,6 +398,7 @@ export const SearchFormLayout = ({ setExternalFilters }) => {
                 optionFilterProp="key"
                 onChange={(value) => handleFilterChange(x.id, value)}
                 tokenSeparators={[","]}
+                defaultValue={externalFilters[x.id]}
                 allowClear
                 bordered
                 showArrow
@@ -436,7 +434,12 @@ export const SearchFormLayout = ({ setExternalFilters }) => {
             <Slider
               className="SearchForm--Slider"
               range
-              defaultValue={[overview.points[1] / 3, overview.points[1] / 1.5]}
+              defaultValue={
+                externalFilters.pointsRange[0] === null &&
+                externalFilters.pointsRange[1] === null
+                  ? [overview.points[0], overview.points[1]]
+                  : externalFilters.pointsRange
+              }
               min={overview.points[0]}
               max={overview.points[1]}
               tipFormatter={(value) => {
@@ -463,7 +466,12 @@ export const SearchFormLayout = ({ setExternalFilters }) => {
             <Slider
               className="SearchForm--Slider"
               range
-              defaultValue={[overview.price[1] / 3, overview.price[1] / 1.5]}
+              defaultValue={
+                externalFilters.priceRange[0] === null &&
+                externalFilters.priceRange[1] === null
+                  ? [overview.price[0], overview.price[1]]
+                  : externalFilters.priceRange
+              }
               min={overview.price[0]}
               max={overview.price[1]}
               tipFormatter={(value) => {
@@ -490,10 +498,12 @@ export const SearchFormLayout = ({ setExternalFilters }) => {
             <Slider
               className="SearchForm--Slider"
               range
-              defaultValue={[
-                overview.pricePerPoint[1] / 3,
-                overview.pricePerPoint[1] / 1.5,
-              ]}
+              defaultValue={
+                externalFilters.pricePerPointRange[0] === null &&
+                externalFilters.pricePerPointRange[1] === null
+                  ? [overview.pricePerPoint[0], overview.pricePerPoint[1]]
+                  : externalFilters.pricePerPointRange
+              }
               min={overview.pricePerPoint[0]}
               max={overview.pricePerPoint[1]}
               tipFormatter={(value) => {
@@ -516,6 +526,7 @@ export const SearchFormLayout = ({ setExternalFilters }) => {
       <Title level={5}>ID</Title>
       <Input
         placeholder="Input ID"
+        defaultValue={externalFilters.idInput}
         size="large"
         onChange={(e) => handleFilterChange("id", e.target.value)}
       />
@@ -537,11 +548,11 @@ export const SearchFormLayout = ({ setExternalFilters }) => {
         <div className="SearchForm--SelectContainer">
           <Title level={5}>Sort By</Title>
           <Select
-            defaultValue="broker"
             style={{ width: 120 }}
             onChange={(value) => {
               handleFilterChange("sidx", value);
             }}
+            defaultValue={externalFilters.sidx}
           >
             <Option value="id">Id</Option>
             <Option value="broker">Broker</Option>
@@ -556,8 +567,8 @@ export const SearchFormLayout = ({ setExternalFilters }) => {
         <div className="SearchForm--SelectContainer">
           <Title level={5}>Order</Title>
           <Select
-            defaultValue="ASC"
             style={{ width: 120 }}
+            defaultValue={externalFilters.sord}
             onChange={(value) => {
               handleFilterChange("sord", value);
             }}
@@ -567,12 +578,12 @@ export const SearchFormLayout = ({ setExternalFilters }) => {
           </Select>
         </div>
       </Col>
-      <Col xs={24} sm={24} md={12} lg={12} xl={24} xxl={12}>
+      {/* <Col xs={24} sm={24} md={12} lg={12} xl={24} xxl={12}>
         <div className="SearchForm--SelectContainer">
           <Title level={5}>Items per page</Title>
           <Select
-            defaultValue="10"
             style={{ width: 120 }}
+            defaultValue={externalFilters.itemsPerPage}
             onChange={(value) => {
               handleFilterChange("ipp", value);
             }}
@@ -585,21 +596,27 @@ export const SearchFormLayout = ({ setExternalFilters }) => {
             <Option value="50">50</Option>
           </Select>
         </div>
-      </Col>
+      </Col> */}
     </Row>
   );
 
   //#endregion
 
   //#region Search Button
-  const [submitOnChange, setSubmitOnChange] = useState(false);
+
+  const handleUrlSearch = (fil) => {
+    window.location.href = baseSearchURL + "?" + new URLSearchParams(fil);
+  };
 
   const searchButtonMarkup = (
     <Button
       type="primary"
       icon={<SearchOutlined />}
       size="middle"
-      disabled={isAllListings && submitOnChange}
+      disabled={isAllListings && filters.submitOnChange}
+      onClick={() =>
+        isAllListings ? searchWithFilters(filters) : handleUrlSearch(filters)
+      }
       block
     >
       Search
@@ -619,10 +636,9 @@ export const SearchFormLayout = ({ setExternalFilters }) => {
       <div className="SearchForm--Checkbox">
         <Checkbox
           onChange={(e) => {
-            console.log(e);
             handleFilterChange("idd", e.target.checked);
           }}
-          defaultChecked
+          defaultChecked={externalFilters.includeDefectiveData}
         >
           Include defective data
         </Checkbox>
@@ -640,9 +656,9 @@ export const SearchFormLayout = ({ setExternalFilters }) => {
         ) : (
           <Checkbox
             onChange={(e) => {
-              setSubmitOnChange(e.target.checked);
+              handleFilterChange("soc", e.target.checked);
             }}
-            defaultChecked={!isAllListings}
+            defaultChecked={true}
             disabled={!isAllListings}
           >
             Submit on change
@@ -653,6 +669,31 @@ export const SearchFormLayout = ({ setExternalFilters }) => {
           changed.
         </p>
       </div>
+
+      <div className="SearchForm--Checkbox">
+        {!isAllListings ? (
+          <Tooltip title="Only available on all listings page!">
+            <Checkbox defaultChecked={false} disabled={!isAllListings}>
+              Multiple Column Sorter
+            </Checkbox>
+          </Tooltip>
+        ) : (
+          <Checkbox
+            onChange={(e) => {
+              handleFilterChange("mcse", e.target.checked);
+            }}
+            defaultChecked={false}
+            disabled={!isAllListings}
+          >
+            Multiple Column Sorter
+          </Checkbox>
+        )}
+        <p className="SearchForm--OptionComment">
+          If selected, column sort will persist and combine with next selected
+          sort/s.
+        </p>
+      </div>
+
       <div>{searchButtonMarkup}</div>
     </Space>
   );
@@ -667,7 +708,7 @@ export const SearchFormLayout = ({ setExternalFilters }) => {
         hoverable
         bordered={false}
       >
-        <Row gutter={24} justify="center">
+        <Row gutter={24} justify="center" align="top">
           <Col lg={24} xl={12} xxl={12}>
             {idSearchFieldMarkup}
             {dropdownsMarkup}

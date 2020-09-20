@@ -9,24 +9,26 @@ import {
 
 import "./LandingStyle.scss";
 import { CookiesNotificationLayout } from "../../components/CookiesNotification/CookiesNotificationLayout";
+import { Footer } from "../../components/Footer/Footer";
 
 export const LandingLayout = () => {
-  const { Header, Footer, Sider, Content } = Layout;
+  const { Header, Sider, Content } = Layout;
 
   const [body, setBody] = useState({
     broker: [],
     resort: [],
     useYear: [],
     status: [],
-    pointsRange: [0, 100],
-    priceRange: [0, 100],
-    pricePerPointRange: [0, 100],
+    pointsRange: [null, null],
+    priceRange: [null, null],
+    pricePerPointRange: [null, null],
     idInput: "",
     sidx: "Broker",
     sord: "Ascending",
-    itemsPerPage: 5,
-    includeDefectiveData: false,
+    itemsPerPage: 10,
+    includeDefectiveData: true,
     submitOnChange: false,
+    multipleSorterEnabled: false,
     currentPage: 1,
   });
 
@@ -37,12 +39,12 @@ export const LandingLayout = () => {
           <LandingCarousel />
         </div>
         <div className="LandingPage--SearchForm">
-          <SearchForm setExternalFilters={setBody} />
+          <SearchForm externalFilters={body} setExternalFilters={setBody} />
         </div>
         {/* <div className="LandingPage--SupportedMarkets">
           <SupportedMarkets />
         </div> */}
-        <Footer>Footer</Footer>
+        <Footer />
       </Layout>
     </div>
   );

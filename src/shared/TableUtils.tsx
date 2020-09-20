@@ -1,6 +1,7 @@
-import { Tag } from "antd";
+import { Tag, Typography } from "antd";
 import React from "react";
 import { BrokerTypes, ResortTypes, StatusTypes, UseYearTypes } from "./Types";
+const { Title } = Typography;
 
 const getStatusColor = (status) => {
   if (status === undefined || status === null) return "status-nostatus";
@@ -30,7 +31,100 @@ export type AlignType = "left" | "center" | "right";
 export const TableColumns = [
   {
     id: 0,
-    title: "Id",
+    title: <span className="TableHeader">ID</span>,
+    align: "center" as AlignType,
+    dataIndex: "id",
+    width: 125,
+    render: (text, column) => {
+      return (
+        <a style={{ fontWeight: "bold" }} target="_blank" href={column.href}>
+          {text}
+        </a>
+      );
+    },
+    sorter: (a, b) => ("" + a.id).localeCompare(b.id),
+  },
+  {
+    id: 1,
+    title: <span className="TableHeader">BROKER</span>,
+    dataIndex: "broker",
+    align: "center" as AlignType,
+    width: 200,
+    render: (val) => <Title level={5}>{BrokerTypes[val]}</Title>,
+    sorter: (a, b) => a.broker - b.broker,
+  },
+  {
+    id: 2,
+    title: <span className="TableHeader">RESORT</span>,
+    dataIndex: "resort",
+    align: "center" as AlignType,
+    width: 200,
+    render: (val) => <Title level={5}>{ResortTypes[val]}</Title>,
+    sorter: (a, b) => a.resort - b.resort,
+  },
+  {
+    id: 3,
+    title: <span className="TableHeader">PRICE</span>,
+    dataIndex: "price",
+    align: "center" as AlignType,
+    render: (text) => <Title level={5}>{text} $</Title>,
+    sorter: (a, b) => a.price - b.price,
+  },
+  {
+    id: 4,
+    title: <span className="TableHeader">POINTS</span>,
+    dataIndex: "points",
+    align: "center" as AlignType,
+    render: (text) => <Title level={5}>{text} P</Title>,
+    sorter: (a, b) => a.points - b.points,
+  },
+  {
+    id: 5,
+    title: <span className="TableHeader">PRICE PER POINT</span>,
+    dataIndex: "pricePerPoint",
+    width: 175,
+    align: "center" as AlignType,
+    render: (text) => <Title level={5}>{text} P/$</Title>,
+    sorter: (a, b) => a.pricePerPoint - b.pricePerPoint,
+  },
+  {
+    id: 6,
+    title: <span className="TableHeader">POINT AVAILABLITY</span>,
+    dataIndex: "pointAvailability",
+    ellipsis: true,
+    width: 200,
+    align: "center" as AlignType,
+    render: (text) => (
+      <Title level={5} ellipsis>
+        {text}
+      </Title>
+    ),
+  },
+  {
+    id: 7,
+    title: <span className="TableHeader">USE YEAR</span>,
+    dataIndex: "useYear",
+    width: 125,
+    align: "center" as AlignType,
+    render: (val) => <Title level={5}>{UseYearTypes[val]}</Title>,
+    sorter: (a, b) => a.useYear - b.useYear,
+  },
+  {
+    id: 8,
+    title: <span className="TableHeader">STATUS</span>,
+    dataIndex: "status",
+    align: "center" as AlignType,
+    render: (val) => (
+      <Tag color={StatusColors[val]}>{StatusTypes[val].toUpperCase()}</Tag>
+    ),
+    sorter: (a, b) => a.status - b.status,
+  },
+];
+
+export const TableColumnsMultiples = [
+  {
+    id: 0,
+    title: <span className="TableHeader">ID</span>,
     align: "center" as AlignType,
     dataIndex: "id",
     render: (text, column) => {
@@ -40,88 +134,113 @@ export const TableColumns = [
         </a>
       );
     },
+    sorter: {
+      compare: (a, b) => ("" + a.id).localeCompare(b.id),
+      multiple: 0,
+    },
   },
   {
     id: 1,
-    title: "Broker",
+    title: <span className="TableHeader">BROKER</span>,
     dataIndex: "broker",
-    render: (val) => <span>{BrokerTypes[val]}</span>,
+    align: "center" as AlignType,
+    width: 200,
+    render: (val) => <Title level={5}>{BrokerTypes[val]}</Title>,
     sorter: {
       compare: (a, b) => a.broker - b.broker,
-      multiple: 1,
+      multiple: 0,
     },
   },
   {
     id: 2,
-    title: "Resort",
+    title: <span className="TableHeader">RESORT</span>,
     dataIndex: "resort",
-    render: (val) => <span>{ResortTypes[val]}</span>,
+    align: "center" as AlignType,
+    width: 200,
+    render: (val) => <Title level={5}>{ResortTypes[val]}</Title>,
     sorter: {
       compare: (a, b) => a.resort - b.resort,
-      multiple: 1,
+      multiple: 0,
     },
   },
   {
     id: 3,
-    title: "Price",
+    title: <span className="TableHeader">PRICE</span>,
     dataIndex: "price",
-    render: (text) => (
-      <span style={{ display: "flex" }}>
-        {text} <span style={{ fontWeight: "bold" }}>$</span>
-      </span>
-    ),
+    align: "center" as AlignType,
+
+    render: (text) => <Title level={5}>{text} $</Title>,
     sorter: {
       compare: (a, b) => a.price - b.price,
-      multiple: 1,
+      multiple: 0,
     },
   },
   {
     id: 4,
-    title: "Points",
+    title: <span className="TableHeader">POINTS</span>,
     dataIndex: "points",
-    render: (text) => <span>{text} P</span>,
+    align: "center" as AlignType,
+    width: 100,
+    render: (text) => <Title level={5}>{text} P</Title>,
     sorter: {
       compare: (a, b) => a.points - b.points,
-      multiple: 1,
+      multiple: 0,
     },
   },
   {
     id: 5,
-    title: "Price Per Point",
+    title: <span className="TableHeader">PRICE PER POINT</span>,
     dataIndex: "pricePerPoint",
-    render: (text) => <span>{text} P/$</span>,
+    width: 175,
+    align: "center" as AlignType,
+    render: (text) => <Title level={5}>{text} P/$</Title>,
     sorter: {
       compare: (a, b) => a.pricePerPoint - b.pricePerPoint,
-      multiple: 1,
+      multiple: 0,
     },
   },
   {
     id: 6,
-    title: "Point Availability",
+    title: <span className="TableHeader">POINT AVAILABLITY</span>,
     dataIndex: "pointAvailability",
     ellipsis: true,
+    width: 200,
+    align: "center" as AlignType,
     render: (text) => (
-      <span className="AllListings--PointAvailablity">{text}</span>
+      <Title level={5} ellipsis>
+        {text}
+      </Title>
     ),
+    sorter: {
+      compare: (a, b) => ("" + a.id).localeCompare(b.id),
+      multiple: 0,
+    },
   },
   {
     id: 7,
-    title: "Use Year",
+    title: <span className="TableHeader">USE YEAR</span>,
     dataIndex: "useYear",
-    render: (val) => <span>{UseYearTypes[val]}</span>,
+    width: 125,
+    align: "center" as AlignType,
+    render: (val) => <Title level={5}>{UseYearTypes[val]}</Title>,
+
     sorter: {
       compare: (a, b) => a.useYear - b.useYear,
-      multiple: 1,
+      multiple: 0,
     },
   },
   {
     id: 8,
-    title: "Status",
+    title: <span className="TableHeader">STATUS</span>,
     dataIndex: "status",
-    render: (val) => <Tag color={StatusColors[val]}>{StatusTypes[val]}</Tag>,
+    align: "center" as AlignType,
+    width: 100,
+    render: (val) => (
+      <Tag color={StatusColors[val]}>{StatusTypes[val].toUpperCase()}</Tag>
+    ),
     sorter: {
       compare: (a, b) => a.status - b.status,
-      multiple: 1,
+      multiple: 0,
     },
   },
 ];
