@@ -1,5 +1,13 @@
 import React from "react";
-import { Typography, List, Collapse, Checkbox, Button } from "antd";
+import {
+  Typography,
+  List,
+  Collapse,
+  Checkbox,
+  Button,
+  message,
+  Space,
+} from "antd";
 import {
   BrokerTypes,
   ResortTypes,
@@ -11,7 +19,7 @@ import { baseSearchURL } from "../../../shared/Shared";
 const { Title, Text } = Typography;
 const { Panel } = Collapse;
 
-export const OpenModalInnerMarkup = ({ savedFilters }) => {
+export const OpenModalInnerMarkup = ({ savedFilters, setOpenModalVisible }) => {
   const listMarkup = (save) => {
     const { name, filters } = save;
 
@@ -112,38 +120,69 @@ export const OpenModalInnerMarkup = ({ savedFilters }) => {
     <div>
       <Title level={5}>Filter Overview </Title>
       <Collapse accordion>
-        {savedFilters?.map((save, key) => {
-          return (
-            <Panel
-              header={
-                <div
-                  style={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                  }}
-                >
-                  <Title level={5} style={{ margin: 0 }}>
-                    {save.name}
-                  </Title>
-                  <Button
-                    type="primary"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      window.location.href =
-                        baseSearchURL + "?" + new URLSearchParams(save.filters);
+        {savedFilters.length > 0 ? (
+          savedFilters?.map((save, key) => {
+            return (
+              <Panel
+                header={
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "center",
                     }}
                   >
-                    Open
-                  </Button>
-                </div>
-              }
-              key={key}
-            >
-              {listMarkup(save)}
-            </Panel>
-          );
-        })}
+                    <Title level={5} style={{ margin: 0 }}>
+                      {save.name}
+                    </Title>
+                    <div>
+                      <Button
+                        type="primary"
+                        danger
+                        style={{ marginRight: "10px" }}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          localStorage.setItem(
+                            "filters",
+                            JSON.stringify(
+                              savedFilters.filter((s) => s.name !== save.name)
+                            )
+                          );
+                          setOpenModalVisible(false);
+                          message.success("Successfully removed saved item!");
+                          window.location.reload();
+                        }}
+                      >
+                        Remove
+                      </Button>
+                      <Button
+                        type="primary"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          window.location.href =
+                            baseSearchURL +
+                            "?" +
+                            new URLSearchParams(save.filters);
+                        }}
+                      >
+                        Open
+                      </Button>
+                    </div>
+                  </div>
+                }
+                key={key}
+              >
+                {listMarkup(save)}
+              </Panel>
+            );
+          })
+        ) : (
+          <Space>
+            <Title level={4}>
+              There are no saves available. Please add one or more to continue.
+            </Title>
+          </Space>
+        )}
       </Collapse>
     </div>
   );

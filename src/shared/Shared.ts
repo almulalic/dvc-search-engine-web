@@ -1,2 +1,2 @@
-export const baseSearchURL = "https://dvc-resales-engine-api.herokuapp.com/";
-export const baseAuthURL = "http://localhost:5000";
+export const baseSearchURL = "https://dvc-resale-engine-web.herokuapp.com/";
+export const baseAuthURL = "https://dvc-resales-engine-api.herokuapp.com";

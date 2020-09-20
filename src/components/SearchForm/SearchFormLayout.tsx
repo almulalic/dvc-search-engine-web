@@ -175,7 +175,10 @@ export const SearchFormLayout = ({ externalFilters, setExternalFilters }) => {
         </Button>,
       ]}
     >
-      <OpenModalInnerMarkup savedFilters={savedFilters} />
+      <OpenModalInnerMarkup
+        savedFilters={savedFilters}
+        setOpenModalVisible={setOpenModalVisible}
+      />
     </Modal>
   );
 
