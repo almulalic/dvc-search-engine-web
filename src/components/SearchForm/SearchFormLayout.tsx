@@ -200,7 +200,15 @@ export const SearchFormLayout = ({ externalFilters, setExternalFilters }) => {
       </div>
       <div className="SearchForm--HeaderBlock SearchForm--HeaderActions">
         <Tooltip title="Reset filters to initial state.">
-          <Button type="primary" icon={<RetweetOutlined />} size="middle" />
+          <Button
+            type="primary"
+            icon={<RetweetOutlined />}
+            size="middle"
+            onClick={() => {
+              window.location.href = process.env.REACT_APP_BASE_SEARCH_URL;
+              message.success("Successfully reseted filter state!");
+            }}
+          />
         </Tooltip>
         <Tooltip title="Copy search form to clipboard.">
           <CopyToClipboard
