@@ -141,9 +141,12 @@ export const AllListingsLayout = (props) => {
 
         setIsBodyUpdating(false);
         setBody(parsedValues);
-        setIsFetchingData(true);
-        fetchListings(parsedValues);
       }
+    } else {
+      setIsBodyUpdating(false);
+      setIsFetchingData(false);
+      setIsFetchingData(true);
+      fetchListings(body);
     }
     setIsFirstRender(false);
   };
@@ -157,6 +160,8 @@ export const AllListingsLayout = (props) => {
     if (!isFirstRender) {
       setIsFetchingData(true);
       fetchListings(body);
+    } else {
+      setIsBodyUpdating(false);
     }
   }, [body]);
 
