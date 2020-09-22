@@ -62,20 +62,20 @@ export const Footer = () => {
     >
       <Title level={5} style={{ textAlign: "center" }}>
         If you have any issues with this platform or if you want to report a bug
-        you can contact us via email or in this text field.
+        you can contact us via email or in text field below.
       </Title>
       <hr />
       <div className="Footer-ContactModal">
         <div>
           <Input
-            placeholder="Please input your name"
+            placeholder="Enter your name..."
             size="middle"
             onChange={(e) => setBody({ ...body, name: e.target.value })}
           />
         </div>
         <div>
           <Input
-            placeholder="Please input your nickname"
+            placeholder="Enter your email..."
             size="middle"
             onChange={(e) => setBody({ ...body, email: e.target.value })}
           />
@@ -156,11 +156,20 @@ export const Footer = () => {
 
       <div className="footer-copyright text-center py-3 Footer-Credits">
         © 2020 Copyright:
-        <a href="https://mdbootstrap.com/">Mulalić Almir</a>
+        <a
+          href="https://www.linkedin.com/in/almir-mulali%C4%87-9097b3195/"
+          target="_blank"
+        >
+          Mulalić Almir
+        </a>
         Idea from:
-        <a href="https://mdbootstrap.com/">Andrea Snyder</a>
+        <a href="https://mdbootstrap.com/" target="_blank">
+          Andrea Snyder
+        </a>
         Implemented with help of:
-        <a href="https://ant.design.com">ANTD Design</a>
+        <a href="https://ant.design.com" target="_blank">
+          ANTD Design
+        </a>
       </div>
       {contactModalMarkup}
     </footer>

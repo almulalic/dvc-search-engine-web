@@ -13,27 +13,18 @@ import {
 import { Footer } from "../../components/Footer/Footer";
 import { useHistory } from "react-router-dom";
 import queryString from "query-string";
+import { DefaultFilterState } from "../../shared/Utils";
 
 export const AllListingsLayout = (props) => {
   const [emptyData, setEmptyData] = useState([]);
 
-  const [body, setBody] = useState({
-    broker: [],
-    resort: [],
-    useYear: [],
-    status: [],
-    pointsRange: [null, null],
-    priceRange: [null, null],
-    pricePerPointRange: [null, null],
-    idInput: "",
-    sidx: "Broker",
-    sord: "Ascending",
-    itemsPerPage: 100000,
-    includeDefectiveData: true,
-    submitOnChange: false,
-    multipleSorterEnabled: false,
-    currentPage: 1,
-  });
+  const [body, setBody] = useState(
+    DefaultFilterState({
+      price: [null, null],
+      points: [null, null],
+      pricePerPoint: [null, null],
+    })
+  );
 
   const [listingsData, setListingsData] = useState([]);
   const [isFetchingData, setIsFetchingData] = useState(true);
@@ -82,12 +73,12 @@ export const AllListingsLayout = (props) => {
         fetchListings(body);
         return;
       }
-
+      console.log(searchBody);
       if (searchBody) {
         const points = searchBody.pointsRange.toString().split(",");
         const price = searchBody.priceRange.toString().split(",");
         const ppp = searchBody.pricePerPointRange.toString().split(",");
-        console.log(searchBody.broker.toString() != "");
+
         let parsedValues = {
           broker:
             searchBody.broker.toString() == ""
@@ -133,12 +124,13 @@ export const AllListingsLayout = (props) => {
           sidx: searchBody.sidx.toString(),
           sord: searchBody.sord.toString(),
           itemsPerPage: 100000,
-          includeDefectiveData: Boolean(searchBody.includeDefectiveData),
-          submitOnChange: Boolean(searchBody.submitOnChange),
-          multipleSorterEnabled: Boolean(searchBody.multipleSorterEnabled),
+          includeDefectiveData: searchBody.includeDefectiveData === "true",
+          submitOnChange: searchBody.submitOnChange === "true",
+          multipleSorterEnabled: searchBody.multipleSorterEnabled === "true",
           currentPage: 1,
         };
 
+        console.log(parsedValues);
         setIsBodyUpdating(false);
         setBody(parsedValues);
       }
@@ -183,11 +175,11 @@ export const AllListingsLayout = (props) => {
         />
       </div>
       <div className="AllListings--SearchForm" style={{ paddingTop: "5rem" }}>
-        {isBodyUpdating ? (
-          <div>load</div>
-        ) : (
-          <SearchForm externalFilters={body} setExternalFilters={setBody} />
-        )}
+        <SearchForm
+          externalFilters={body}
+          setExternalFilters={setBody}
+          isBodyUpdating={isBodyUpdating}
+        />
       </div>
       <div className="AllListings--Table">
         <div className="AllListings--TableListingText">

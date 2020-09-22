@@ -75,7 +75,7 @@ export const SaveModalInnerMarkup = ({ filters, setSaveInput }) => {
       </List.Item>
       <List.Item>
         <Text strong>ID:</Text>
-        <Text>{filters.idInput.length === 0 ? "-" : filters.id}</Text>
+        <Text>{filters.idInput.length === 0 ? "-" : filters.idInput}</Text>
       </List.Item>
       <List.Item>
         <Text strong>Sort By:</Text>
@@ -97,6 +97,10 @@ export const SaveModalInnerMarkup = ({ filters, setSaveInput }) => {
         <Text strong>Submit On Change:</Text>
         <Text> {filters.submitOnChange ? "Yes." : "No."}</Text>
       </List.Item>
+      <List.Item>
+        <Text strong>Multiple Column Filter:</Text>
+        <Text> {filters.multipleColumnFilter ? "Yes." : "No."}</Text>
+      </List.Item>
     </List>
   );
   return (
@@ -111,9 +115,8 @@ export const SaveModalInnerMarkup = ({ filters, setSaveInput }) => {
         />
       </div>
       <Text type="secondary">
-        Note that this engine uses cookies to store personal data. If you delete
-        cookies or prevent them from loading you won't be able to access these
-        save files!
+        Note that this engine uses local storage to store personal data. If you
+        delete or clear local data you won't be able to access these save files!
       </Text>
     </Space>
   );

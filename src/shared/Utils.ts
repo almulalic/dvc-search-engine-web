@@ -23,3 +23,23 @@ export const validateEmail = (email) => {
   const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
   return re.test(String(email).toLowerCase());
 };
+
+export const DefaultFilterState = (overview) => {
+  return {
+    broker: [],
+    resort: [],
+    useYear: [],
+    status: [],
+    pointsRange: [overview.points[0], overview.points[1]],
+    priceRange: [overview.price[0], overview.price[1]],
+    pricePerPointRange: [overview.pricePerPoint[0], overview.pricePerPoint[1]],
+    idInput: "",
+    sidx: "Broker",
+    sord: "Ascending",
+    itemsPerPage: 100000,
+    includeDefectiveData: true,
+    submitOnChange: false,
+    multipleSorterEnabled: false,
+    currentPage: 1,
+  };
+};
