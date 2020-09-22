@@ -1,19 +1,12 @@
 import React, { useState } from "react";
 import { Layout } from "antd";
 
-import {
-  LandingCarousel,
-  SearchForm,
-  SupportedMarkets,
-} from "../../components";
+import { LandingCarousel, SearchForm } from "../../components";
 
 import "./LandingStyle.scss";
-import { CookiesNotificationLayout } from "../../components/CookiesNotification/CookiesNotificationLayout";
 import { Footer } from "../../components/Footer/Footer";
 
 export const LandingLayout = () => {
-  const { Header, Sider, Content } = Layout;
-
   const [body, setBody] = useState({
     broker: [],
     resort: [],

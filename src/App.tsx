@@ -5,15 +5,10 @@ import {
   BrowserRouter as Router,
   Switch,
   Route,
-  useHistory,
   Redirect,
 } from "react-router-dom";
 
 const App = () => {
-  let history = useHistory();
-
-  require("dotenv").config();
-
   return (
     <div className="App">
       <Router>

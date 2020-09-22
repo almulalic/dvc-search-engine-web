@@ -42,7 +42,7 @@ export const AllListingsLayout = (props) => {
 
   const fetchListings = (body) => {
     axios
-      .post(process.env.BASE_API_URL + "/search/FilterData", body)
+      .post(process.env.REACT_APP_BASE_API_URL + "/search/FilterData", body)
       .then((res) => {
         let adaptedData = [];
 

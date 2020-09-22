@@ -1,66 +1,53 @@
-import React, { useState, useEffect, useCallback } from "react";
+//#region Imports
+
+import React, { useState, useEffect } from "react";
 import numeral from "numeral";
 
 import {
+  FolderOpenOutlined,
   SearchOutlined,
   SaveOutlined,
   CopyOutlined,
-  SaveTwoTone,
-  CopyTwoTone,
-  RightOutlined,
-  FolderOpenOutlined,
-  DollarCircleOutlined,
 } from "@ant-design/icons";
 
 import {
-  Card,
+  Typography,
   Statistic,
-  Space,
+  Checkbox,
+  Collapse,
+  Tooltip,
+  message,
   Select,
+  Button,
+  Slider,
+  Space,
+  Modal,
+  Input,
+  Card,
   Row,
   Col,
-  Checkbox,
-  Tooltip,
-  Button,
-  message,
-  Modal,
-  Slider,
-  DatePicker,
-  Typography,
-  Input,
-  Steps,
-  List,
-  Collapse,
 } from "antd";
 
-import Skeleton from "react-loading-skeleton";
-
-import "./SearchFormStyle.scss";
-import { calculateTimer, validateAndSave } from "./SearchForm";
 import {
+  UseYearAlias,
   BrokerAlias,
   ResortAlias,
-  UseYearAlias,
   StatusAlias,
-  ResortTypes,
-  UseYearTypes,
-  StatusTypes,
 } from "../../shared/Types";
-import Cookies from "universal-cookie";
+
 import { SaveModalInnerMarkup } from "./SaveModalInnerMarkup/SaveModalInnerMarkup";
-import { decodeCamelCase, serializeURL, useQuery } from "../../shared/Utils";
-import { BrokerTypes } from "./../../shared/Types";
-import { CopyToClipboard } from "react-copy-to-clipboard";
 import { OpenModalInnerMarkup } from "./SaveModalInnerMarkup/OpenModalInnerMarkup";
+import { calculateTimer, validateAndSave } from "./SearchForm";
+import { CopyToClipboard } from "react-copy-to-clipboard";
+import Skeleton from "react-loading-skeleton";
+import "./SearchFormStyle.scss";
 import axios from "axios";
-import { useHistory } from "react-router-dom";
+
+//#endregion
 
 const { Countdown } = Statistic;
 const { Text, Title } = Typography;
 const { Option } = Select;
-const { Panel } = Collapse;
-
-const cookies = new Cookies();
 
 export const SearchFormLayout = ({ externalFilters, setExternalFilters }) => {
   //#region Overview
@@ -79,7 +66,7 @@ export const SearchFormLayout = ({ externalFilters, setExternalFilters }) => {
 
   const fetchOverview = () => {
     axios
-      .get(process.env.BASE_API_URL + "/search/overview")
+      .get(process.env.REACT_APP_BASE_API_URL + "/search/overview")
       .then((res) => {
         setOverview(res.data);
         setIsFetchingOverview(false);
@@ -214,7 +201,9 @@ export const SearchFormLayout = ({ externalFilters, setExternalFilters }) => {
         <Tooltip title="Copy search form to clipboard.">
           <CopyToClipboard
             text={
-              process.env.BASE_SEARCH_URL + "?" + new URLSearchParams(filters)
+              process.env.REACT_APP_SEARCH_URL +
+              "?" +
+              new URLSearchParams(filters)
             }
             onCopy={() => message.success("Successfully copied to clipboard!")}
           >
@@ -610,7 +599,7 @@ export const SearchFormLayout = ({ externalFilters, setExternalFilters }) => {
 
   const handleUrlSearch = (fil) => {
     window.location.href =
-      process.env.BASE_SEARCH_URL + "?" + new URLSearchParams(fil);
+      process.env.REACT_APP_SEARCH_URL + "?" + new URLSearchParams(fil);
   };
 
   const searchButtonMarkup = (
