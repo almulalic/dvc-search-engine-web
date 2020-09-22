@@ -52,7 +52,6 @@ import { decodeCamelCase, serializeURL, useQuery } from "../../shared/Utils";
 import { BrokerTypes } from "./../../shared/Types";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import { OpenModalInnerMarkup } from "./SaveModalInnerMarkup/OpenModalInnerMarkup";
-import { baseSearchURL, baseAuthURL } from "../../shared/Shared";
 import axios from "axios";
 import { useHistory } from "react-router-dom";
 
@@ -80,7 +79,7 @@ export const SearchFormLayout = ({ externalFilters, setExternalFilters }) => {
 
   const fetchOverview = () => {
     axios
-      .get(baseAuthURL + "/search/overview")
+      .get(process.env.BASE_API_URL + "/search/overview")
       .then((res) => {
         setOverview(res.data);
         setIsFetchingOverview(false);
@@ -214,7 +213,9 @@ export const SearchFormLayout = ({ externalFilters, setExternalFilters }) => {
       <div className="SearchForm--HeaderBlock SearchForm--HeaderActions">
         <Tooltip title="Copy search form to clipboard.">
           <CopyToClipboard
-            text={baseSearchURL + "?" + new URLSearchParams(filters)}
+            text={
+              process.env.BASE_SEARCH_URL + "?" + new URLSearchParams(filters)
+            }
             onCopy={() => message.success("Successfully copied to clipboard!")}
           >
             <Button type="primary" icon={<CopyOutlined />} size="middle" />
@@ -608,7 +609,8 @@ export const SearchFormLayout = ({ externalFilters, setExternalFilters }) => {
   //#region Search Button
 
   const handleUrlSearch = (fil) => {
-    window.location.href = baseSearchURL + "?" + new URLSearchParams(fil);
+    window.location.href =
+      process.env.BASE_SEARCH_URL + "?" + new URLSearchParams(fil);
   };
 
   const searchButtonMarkup = (

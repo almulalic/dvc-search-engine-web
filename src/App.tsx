@@ -12,6 +12,8 @@ import {
 const App = () => {
   let history = useHistory();
 
+  require("dotenv").config();
+
   return (
     <div className="App">
       <Router>

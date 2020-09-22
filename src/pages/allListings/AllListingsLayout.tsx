@@ -4,7 +4,6 @@ import { SearchForm } from "../../components";
 import axios from "axios";
 
 import "./AllListingsStyle.scss";
-import { baseAuthURL } from "../../shared/Shared";
 import { Table, Empty, message, PageHeader } from "antd";
 import {
   EmptyData,
@@ -43,7 +42,7 @@ export const AllListingsLayout = (props) => {
 
   const fetchListings = (body) => {
     axios
-      .post(baseAuthURL + "/search/FilterData", body)
+      .post(process.env.BASE_API_URL + "/search/FilterData", body)
       .then((res) => {
         let adaptedData = [];
 
