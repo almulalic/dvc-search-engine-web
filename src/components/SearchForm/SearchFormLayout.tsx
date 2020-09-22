@@ -8,6 +8,7 @@ import {
   SearchOutlined,
   SaveOutlined,
   CopyOutlined,
+  RetweetOutlined,
 } from "@ant-design/icons";
 
 import {
@@ -198,6 +199,9 @@ export const SearchFormLayout = ({ externalFilters, setExternalFilters }) => {
         </span>
       </div>
       <div className="SearchForm--HeaderBlock SearchForm--HeaderActions">
+        <Tooltip title="Reset filters to initial state.">
+          <Button type="primary" icon={<RetweetOutlined />} size="middle" />
+        </Tooltip>
         <Tooltip title="Copy search form to clipboard.">
           <CopyToClipboard
             text={
