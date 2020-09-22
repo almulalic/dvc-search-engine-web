@@ -3,9 +3,9 @@ import "./Footer.scss";
 import { useHistory } from "react-router-dom";
 import { Button, Form, Input, message, Modal, Space, Typography } from "antd";
 import TextArea from "antd/lib/input/TextArea";
-import { baseAuthURL } from "../../shared/Shared";
-import axios from "axios";
+
 import { validateEmail } from "../../shared/Utils";
+import axios from "axios";
 
 const { Title, Text } = Typography;
 
@@ -34,7 +34,7 @@ export const Footer = () => {
     }
 
     axios
-      .post(baseAuthURL + "/contact/submit", body)
+      .post(process.env.BASE_API + "/contact/submit", body)
       .then((res) => {
         setContactModalVisible(false);
         message.success("Contact form submited successfully!");

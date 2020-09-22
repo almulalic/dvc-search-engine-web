@@ -14,7 +14,6 @@ import {
   UseYearTypes,
   StatusTypes,
 } from "../../../shared/Types";
-import { baseSearchURL } from "../../../shared/Shared";
 
 const { Title, Text } = Typography;
 const { Panel } = Collapse;
@@ -160,7 +159,7 @@ export const OpenModalInnerMarkup = ({ savedFilters, setOpenModalVisible }) => {
                         onClick={(e) => {
                           e.stopPropagation();
                           window.location.href =
-                            baseSearchURL +
+                            process.env.BASE_SEARCH_URL +
                             "?" +
                             new URLSearchParams(save.filters);
                         }}
