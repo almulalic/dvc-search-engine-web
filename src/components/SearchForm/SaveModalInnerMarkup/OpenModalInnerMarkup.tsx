@@ -159,7 +159,7 @@ export const OpenModalInnerMarkup = ({ savedFilters, setOpenModalVisible }) => {
                         onClick={(e) => {
                           e.stopPropagation();
                           window.location.href =
-                            process.env.REACT_APP_SEARCH_URL +
+                            process.env.REACT_APP_BASE_SEARCH_URL +
                             "?" +
                             new URLSearchParams(save.filters);
                         }}

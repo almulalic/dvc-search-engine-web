@@ -201,7 +201,7 @@ export const SearchFormLayout = ({ externalFilters, setExternalFilters }) => {
         <Tooltip title="Copy search form to clipboard.">
           <CopyToClipboard
             text={
-              process.env.REACT_APP_SEARCH_URL +
+              process.env.REACT_APP_BASE_SEARCH_URL +
               "?" +
               new URLSearchParams(filters)
             }
@@ -599,7 +599,7 @@ export const SearchFormLayout = ({ externalFilters, setExternalFilters }) => {
 
   const handleUrlSearch = (fil) => {
     window.location.href =
-      process.env.REACT_APP_SEARCH_URL + "?" + new URLSearchParams(fil);
+      process.env.REACT_APP_BASE_SEARCH_URL + "?" + new URLSearchParams(fil);
   };
 
   const searchButtonMarkup = (
