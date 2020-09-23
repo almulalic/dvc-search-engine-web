@@ -51,11 +51,7 @@ const { Countdown } = Statistic;
 const { Text, Title } = Typography;
 const { Option } = Select;
 
-export const SearchFormLayout = ({
-  externalFilters,
-  setExternalFilters,
-  isBodyUpdating,
-}) => {
+export const SearchFormLayout = ({ externalFilters, setExternalFilters }) => {
   //#region Overview
 
   const isAllListings = window.location.href.includes("allListings");
@@ -111,6 +107,12 @@ export const SearchFormLayout = ({
   //#endregion
 
   //#region Header
+
+  const [isBodyUpdating, setBodyUpdating] = useState(false);
+
+  useEffect(() => {
+    setBodyUpdating(false);
+  }, [isBodyUpdating]);
 
   //#region Save
 
@@ -210,6 +212,8 @@ export const SearchFormLayout = ({
             icon={<RetweetOutlined />}
             size="middle"
             onClick={() => {
+              setBodyUpdating(true);
+              setFilters(DefaultFilterState(overview));
               setExternalFilters(DefaultFilterState(overview));
               message.success("Successfully reseted filter state!");
             }}
@@ -447,7 +451,7 @@ export const SearchFormLayout = ({
               min={overview.points[0]}
               max={overview.points[1]}
               tipFormatter={(value) => {
-                return `${value} P`;
+                return `${numeral(value).format("0,0[.]00")} P`;
               }}
               onAfterChange={(value) => handleFilterChange("points", value)}
             />
@@ -459,7 +463,7 @@ export const SearchFormLayout = ({
           <Title level={5}>
             Price [
             <span className="SearchForm--RangeLables">
-              {numeral(overview.price[0]).format("0,0[.]00 $")} {" - "}
+              {numeral(overview.price[0]).format("0,0[.]00 $")}
               {numeral(overview.price[1]).format("0,0[.]00 $")}
             </span>
             ]
@@ -479,7 +483,7 @@ export const SearchFormLayout = ({
               min={overview.price[0]}
               max={overview.price[1]}
               tipFormatter={(value) => {
-                return `${value} $`;
+                return `${numeral(value).format("0,0[.]00 $")}`;
               }}
               onAfterChange={(value) => handleFilterChange("price", value)}
             />
@@ -511,7 +515,7 @@ export const SearchFormLayout = ({
               min={overview.pricePerPoint[0]}
               max={overview.pricePerPoint[1]}
               tipFormatter={(value) => {
-                return `${value} P/$`;
+                return `${numeral(value).format("0,0[.]00 ")} P/$`;
               }}
               onAfterChange={(value) => handleFilterChange("ppp", value)}
             />
@@ -594,13 +598,24 @@ export const SearchFormLayout = ({
       process.env.REACT_APP_BASE_SEARCH_URL + "?" + new URLSearchParams(fil);
   };
 
-  const searchButtonMarkup = (
+  const searchButtonMarkup = filters.submitOnChange ? (
+    <Tooltip title="Disable submit on change if you want to use this action.">
+      <Button
+        type="primary"
+        icon={<SearchOutlined />}
+        size="middle"
+        disabled={true}
+        block
+      >
+        Search
+      </Button>
+    </Tooltip>
+  ) : (
     <Button
       type="primary"
       icon={<SearchOutlined />}
       size="middle"
       defaultValue={filters.submitOnChange}
-      disabled={isAllListings && filters.submitOnChange}
       onClick={() =>
         isAllListings ? searchWithFilters(filters) : handleUrlSearch(filters)
       }
@@ -636,7 +651,7 @@ export const SearchFormLayout = ({
       <div className="SearchForm--Checkbox">
         {!isAllListings ? (
           <Tooltip title="Only available on all listings page!">
-            <Checkbox defaultChecked={!isAllListings} disabled={!isAllListings}>
+            <Checkbox defaultChecked={true} disabled={true}>
               Submit on change
             </Checkbox>
           </Tooltip>
@@ -645,8 +660,7 @@ export const SearchFormLayout = ({
             onChange={(e) => {
               handleFilterChange("soc", e.target.checked);
             }}
-            defaultChecked={externalFilters.multipleSorterEnabled}
-            disabled={!isAllListings}
+            defaultChecked={externalFilters.submitOnChange}
           >
             Submit on change
           </Checkbox>
@@ -660,7 +674,7 @@ export const SearchFormLayout = ({
       <div className="SearchForm--Checkbox">
         {!isAllListings ? (
           <Tooltip title="Only available on all listings page!">
-            <Checkbox disabled={!isAllListings}>
+            <Checkbox defaultChecked={false} disabled={true}>
               Multiple Column Sorter
             </Checkbox>
           </Tooltip>
@@ -670,7 +684,6 @@ export const SearchFormLayout = ({
               handleFilterChange("mcse", e.target.checked);
             }}
             defaultChecked={externalFilters.multipleSorterEnabled}
-            disabled={!isAllListings}
           >
             Multiple Column Sorter
           </Checkbox>
@@ -689,13 +702,15 @@ export const SearchFormLayout = ({
 
   return (
     <div className="SearchForm">
-      <Spin spinning={isBodyUpdating}>
-        <Card
-          className="SearchForm--Card"
-          title={searchFormHeaderMarkup}
-          hoverable
-          bordered={false}
-        >
+      <Card
+        className="SearchForm--Card"
+        title={searchFormHeaderMarkup}
+        hoverable
+        bordered={false}
+      >
+        {isBodyUpdating ? (
+          <div>Load</div>
+        ) : (
           <Row gutter={24} justify="center" align="top">
             <Col lg={24} xl={12} xxl={12}>
               {idSearchFieldMarkup}
@@ -707,8 +722,8 @@ export const SearchFormLayout = ({
               {moreOptionsMarkup}
             </Col>
           </Row>
-        </Card>
-      </Spin>
+        )}
+      </Card>
     </div>
   );
 };

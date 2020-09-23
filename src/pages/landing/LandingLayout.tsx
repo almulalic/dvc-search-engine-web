@@ -23,11 +23,7 @@ export const LandingLayout = () => {
           <LandingCarousel />
         </div>
         <div className="LandingPage--SearchForm">
-          <SearchForm
-            externalFilters={body}
-            setExternalFilters={setBody}
-            isBodyUpdating={false}
-          />
+          <SearchForm externalFilters={body} setExternalFilters={setBody} />
         </div>
         {/* <div className="LandingPage--SupportedMarkets">
           <SupportedMarkets />

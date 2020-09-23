@@ -25,7 +25,11 @@ export const OpenModalInnerMarkup = ({ savedFilters, setOpenModalVisible }) => {
     if (!filters) return;
 
     return (
-      <List bordered>
+      <List header={<Title level={5}>Filter overview</Title>} bordered>
+        <List.Item>
+          <Text strong>ID:</Text>
+          <Text>{filters.idInput.length === 0 ? "-" : filters.idInput}</Text>
+        </List.Item>
         <List.Item>
           <Text strong>Brokers:</Text>
           <Text>
@@ -77,20 +81,23 @@ export const OpenModalInnerMarkup = ({ savedFilters, setOpenModalVisible }) => {
         <List.Item>
           <Text strong>Points:</Text>
           <Text>
-            From {filters.pointsRange[0]} to {filters.pointsRange[1]}
+            From {filters.pointsRange[0]} P to {filters.pointsRange[1]} P
+          </Text>
+        </List.Item>
+        <List.Item>
+          <Text strong>Price:</Text>
+          <Text>
+            From {filters.priceRange[0]} $ to {filters.priceRange[1]} $
           </Text>
         </List.Item>
         <List.Item>
           <Text strong>Price Per Point:</Text>
           <Text>
-            From {filters.pricePerPointRange[0]} to{" "}
-            {filters.pricePerPointRange[1]}
+            From {filters.pricePerPointRange[0]} P/$ to
+            {filters.pricePerPointRange[1]} P/$
           </Text>
         </List.Item>
-        <List.Item>
-          <Text strong>ID:</Text>
-          <Text>{filters.idInput.length === 0 ? "-" : filters.id}</Text>
-        </List.Item>
+
         <List.Item>
           <Text strong>Sort By:</Text>
           <Text>{filters.sidx}</Text>
@@ -99,10 +106,10 @@ export const OpenModalInnerMarkup = ({ savedFilters, setOpenModalVisible }) => {
           <Text strong>Order:</Text>
           <Text>{filters.sord}</Text>
         </List.Item>
-        <List.Item>
-          <Text strong>Items Per Page:</Text>
-          <Text>{filters.itemsPerPage}</Text>
-        </List.Item>
+        {/* <List.Item>
+        <Text strong>Items Per Page:</Text>
+        <Text>{filters.itemsPerPage}</Text>
+      </List.Item> */}
         <List.Item>
           <Text strong>Include Defective Data:</Text>
           <Text>{filters.includeDefectiveData ? "Yes." : "No."}</Text>
@@ -110,6 +117,10 @@ export const OpenModalInnerMarkup = ({ savedFilters, setOpenModalVisible }) => {
         <List.Item>
           <Text strong>Submit On Change:</Text>
           <Text> {filters.submitOnChange ? "Yes." : "No."}</Text>
+        </List.Item>
+        <List.Item>
+          <Text strong>Multiple Column Filter:</Text>
+          <Text> {filters.multipleColumnFilter ? "Yes." : "No."}</Text>
         </List.Item>
       </List>
     );

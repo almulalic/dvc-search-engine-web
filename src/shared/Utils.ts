@@ -38,7 +38,7 @@ export const DefaultFilterState = (overview) => {
     sord: "Ascending",
     itemsPerPage: 100000,
     includeDefectiveData: true,
-    submitOnChange: false,
+    submitOnChange: true,
     multipleSorterEnabled: false,
     currentPage: 1,
   };

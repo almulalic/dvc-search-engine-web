@@ -13,6 +13,10 @@ export const SaveModalInnerMarkup = ({ filters, setSaveInput }) => {
   const listMarkup = (
     <List header={<Title level={5}>Filter overview</Title>} bordered>
       <List.Item>
+        <Text strong>ID:</Text>
+        <Text>{filters.idInput.length === 0 ? "-" : filters.idInput}</Text>
+      </List.Item>
+      <List.Item>
         <Text strong>Brokers:</Text>
         <Text>
           {filters.broker.length === 0
@@ -63,20 +67,23 @@ export const SaveModalInnerMarkup = ({ filters, setSaveInput }) => {
       <List.Item>
         <Text strong>Points:</Text>
         <Text>
-          From {filters.pointsRange[0]} to {filters.pointsRange[1]}
+          From {filters.pointsRange[0]} P to {filters.pointsRange[1]} P
+        </Text>
+      </List.Item>
+      <List.Item>
+        <Text strong>Price:</Text>
+        <Text>
+          From {filters.priceRange[0]} $ to {filters.priceRange[1]} $
         </Text>
       </List.Item>
       <List.Item>
         <Text strong>Price Per Point:</Text>
         <Text>
-          From {filters.pricePerPointRange[0]} to{" "}
-          {filters.pricePerPointRange[1]}
+          From {filters.pricePerPointRange[0]} P/$ to
+          {filters.pricePerPointRange[1]} P/$
         </Text>
       </List.Item>
-      <List.Item>
-        <Text strong>ID:</Text>
-        <Text>{filters.idInput.length === 0 ? "-" : filters.idInput}</Text>
-      </List.Item>
+
       <List.Item>
         <Text strong>Sort By:</Text>
         <Text>{filters.sidx}</Text>
@@ -85,10 +92,10 @@ export const SaveModalInnerMarkup = ({ filters, setSaveInput }) => {
         <Text strong>Order:</Text>
         <Text>{filters.sord}</Text>
       </List.Item>
-      <List.Item>
+      {/* <List.Item>
         <Text strong>Items Per Page:</Text>
         <Text>{filters.itemsPerPage}</Text>
-      </List.Item>
+      </List.Item> */}
       <List.Item>
         <Text strong>Include Defective Data:</Text>
         <Text>{filters.includeDefectiveData ? "Yes." : "No."}</Text>

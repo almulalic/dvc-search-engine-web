@@ -4,7 +4,7 @@ import { SearchForm } from "../../components";
 import axios from "axios";
 
 import "./AllListingsStyle.scss";
-import { Table, Empty, message, PageHeader } from "antd";
+import { Table, Empty, message, PageHeader, Card, Skeleton } from "antd";
 import {
   EmptyData,
   TableColumns,
@@ -18,62 +18,19 @@ import { DefaultFilterState } from "../../shared/Utils";
 export const AllListingsLayout = (props) => {
   const [emptyData, setEmptyData] = useState([]);
 
-  const [body, setBody] = useState(
-    DefaultFilterState({
-      price: [null, null],
-      points: [null, null],
-      pricePerPoint: [null, null],
-    })
-  );
+  const defaultState = DefaultFilterState({
+    price: [null, null],
+    points: [null, null],
+    pricePerPoint: [null, null],
+  });
 
-  const [listingsData, setListingsData] = useState([]);
-  const [isFetchingData, setIsFetchingData] = useState(true);
-
-  const [isFirstRender, setIsFirstRender] = useState(true);
-
-  const fetchListings = (body) => {
-    axios
-      .post(process.env.REACT_APP_BASE_API_URL + "/search/FilterData", body)
-      .then((res) => {
-        let adaptedData = [];
-
-        res.data.records.forEach((record, i) => {
-          adaptedData.push({
-            id: record.id,
-            resort: record.resort,
-            price: record.price,
-            points: record.points,
-            pricePerPoint: record.pricePerPoint,
-            pointAvailability: record.pointAvailability,
-            useYear: record.useYear,
-            status: record.status,
-            href: record.href,
-            broker: record.broker,
-          });
-        });
-
-        setListingsData(adaptedData);
-        setIsFetchingData(false);
-      })
-      .catch((err) => {
-        console.log(err);
-        setIsFetchingData(false);
-      });
-  };
-
-  const [isBodyUpdating, setIsBodyUpdating] = useState(true);
-
-  const parseURLParams = async () => {
+  const parseBody = () => {
     if (Object.keys(props.location.search).length !== 0) {
       const searchBody = queryString.parse(props.location.search);
 
-      if (Object.keys(searchBody).length !== Object.keys(body).length) {
-        setIsBodyUpdating(false);
-        setIsFetchingData(true);
-        fetchListings(body);
-        return;
-      }
-      console.log(searchBody);
+      if (Object.keys(searchBody).length !== Object.keys(defaultState).length)
+        return defaultState;
+
       if (searchBody) {
         const points = searchBody.pointsRange.toString().split(",");
         const price = searchBody.priceRange.toString().split(",");
@@ -130,31 +87,49 @@ export const AllListingsLayout = (props) => {
           currentPage: 1,
         };
 
-        console.log(parsedValues);
-        setIsBodyUpdating(false);
-        setBody(parsedValues);
-      }
-    } else {
-      setIsBodyUpdating(false);
-      setIsFetchingData(false);
-      setIsFetchingData(true);
-      fetchListings(body);
-    }
-    setIsFirstRender(false);
+        return parsedValues;
+      } else return defaultState;
+    } else return defaultState;
+  };
+
+  const [body, setBody] = useState(parseBody());
+
+  const [listingsData, setListingsData] = useState([]);
+  const [isFetchingData, setIsFetchingData] = useState(true);
+
+  const fetchListings = (body) => {
+    axios
+      .post(process.env.REACT_APP_BASE_API_URL + "/search/FilterData", body)
+      .then((res) => {
+        let adaptedData = [];
+
+        res.data.records.forEach((record, i) => {
+          adaptedData.push({
+            id: record.id,
+            resort: record.resort,
+            price: record.price,
+            points: record.points,
+            pricePerPoint: record.pricePerPoint,
+            pointAvailability: record.pointAvailability,
+            useYear: record.useYear,
+            status: record.status,
+            href: record.href,
+            broker: record.broker,
+          });
+        });
+
+        setListingsData(adaptedData);
+        setIsFetchingData(false);
+      })
+      .catch((err) => {
+        console.log(err);
+        setIsFetchingData(false);
+      });
   };
 
   useEffect(() => {
-    setIsBodyUpdating(true);
-    parseURLParams();
-  }, []);
-
-  useEffect(() => {
-    if (!isFirstRender) {
-      setIsFetchingData(true);
-      fetchListings(body);
-    } else {
-      setIsBodyUpdating(false);
-    }
+    setIsFetchingData(true);
+    fetchListings(body);
   }, [body]);
 
   const noUrlMessage = () => {
@@ -175,11 +150,7 @@ export const AllListingsLayout = (props) => {
         />
       </div>
       <div className="AllListings--SearchForm" style={{ paddingTop: "5rem" }}>
-        <SearchForm
-          externalFilters={body}
-          setExternalFilters={setBody}
-          isBodyUpdating={isBodyUpdating}
-        />
+        <SearchForm externalFilters={body} setExternalFilters={setBody} />
       </div>
       <div className="AllListings--Table">
         <div className="AllListings--TableListingText">
@@ -192,7 +163,7 @@ export const AllListingsLayout = (props) => {
           dataSource={isFetchingData ? emptyData : listingsData}
           pagination={{ position: ["bottomCenter"] }}
           columns={
-            body.multipleSorterEnabled ? TableColumnsMultiples : TableColumns
+            body?.multipleSorterEnabled ? TableColumnsMultiples : TableColumns
           }
           loading={isFetchingData}
           className="AllListings--Table"
