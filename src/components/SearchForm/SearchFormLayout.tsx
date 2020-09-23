@@ -598,7 +598,18 @@ export const SearchFormLayout = ({ externalFilters, setExternalFilters }) => {
       process.env.REACT_APP_BASE_SEARCH_URL + "?" + new URLSearchParams(fil);
   };
 
-  const searchButtonMarkup = filters.submitOnChange ? (
+  const searchButtonMarkup = !isAllListings ? (
+    <Button
+      type="primary"
+      icon={<SearchOutlined />}
+      size="middle"
+      defaultValue={filters.submitOnChange}
+      onClick={() => handleUrlSearch(filters)}
+      block
+    >
+      Search
+    </Button>
+  ) : filters.submitOnChange ? (
     <Tooltip title="Disable submit on change if you want to use this action.">
       <Button
         type="primary"
@@ -616,9 +627,7 @@ export const SearchFormLayout = ({ externalFilters, setExternalFilters }) => {
       icon={<SearchOutlined />}
       size="middle"
       defaultValue={filters.submitOnChange}
-      onClick={() =>
-        isAllListings ? searchWithFilters(filters) : handleUrlSearch(filters)
-      }
+      onClick={() => searchWithFilters(filters)}
       block
     >
       Search

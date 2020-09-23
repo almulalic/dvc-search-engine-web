@@ -110,6 +110,19 @@ export const Footer = () => {
               <a
                 className="Footer-Link"
                 onClick={() => {
+                  history.push("/landing");
+                }}
+              >
+                Landing
+              </a>
+            </h6>
+          </div>
+
+          <div className="col-md-2 mb-3">
+            <h6 className="text-uppercase font-weight-bold">
+              <a
+                className="Footer-Link"
+                onClick={() => {
                   history.push("/allListings");
                 }}
               >
