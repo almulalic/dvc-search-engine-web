@@ -29,12 +29,7 @@ import {
   Col,
 } from "antd";
 
-import {
-  UseYearAlias,
-  BrokerAlias,
-  ResortAlias,
-  StatusAlias,
-} from "../../shared/Types";
+import { UseYearAlias, BrokerAlias, ResortAlias, StatusAlias } from "../../shared/Types";
 
 import { SaveModalInnerMarkup } from "./SaveModalInnerMarkup/SaveModalInnerMarkup";
 import { OpenModalInnerMarkup } from "./SaveModalInnerMarkup/OpenModalInnerMarkup";
@@ -140,8 +135,7 @@ export const SearchFormLayout = ({ externalFilters, setExternalFilters }) => {
           key="submit"
           type="primary"
           onClick={() => {
-            if (validateAndSave(saveInput, saveInput, savedFilters, filters))
-              setSaveModalVisible(false);
+            if (validateAndSave(saveInput, saveInput, savedFilters, filters)) setSaveModalVisible(false);
           }}
         >
           Save
@@ -169,10 +163,7 @@ export const SearchFormLayout = ({ externalFilters, setExternalFilters }) => {
         </Button>,
       ]}
     >
-      <OpenModalInnerMarkup
-        savedFilters={savedFilters}
-        setOpenModalVisible={setOpenModalVisible}
-      />
+      <OpenModalInnerMarkup savedFilters={savedFilters} setOpenModalVisible={setOpenModalVisible} />
     </Modal>
   );
 
@@ -197,13 +188,11 @@ export const SearchFormLayout = ({ externalFilters, setExternalFilters }) => {
         <Text className="SearchForm--HeaderSubtitle" type="secondary">
           Time Left:
         </Text>
-        <span className="SearchForm--Counter">
-          <Countdown
-            value={deadline}
-            onFinish={() => setDeadline(calculateTimer())}
-            format="HH:mm:ss"
-          />
-        </span>
+        <Tooltip title="Time left untill next database update of resort info. Resets every 30minutes">
+          <span className="SearchForm--Counter">
+            <Countdown value={deadline} onFinish={() => setDeadline(calculateTimer())} format="HH:mm:ss" />
+          </span>
+        </Tooltip>
       </div>
       <div className="SearchForm--HeaderBlock SearchForm--HeaderActions">
         <Tooltip title="Reset filters to initial state.">
@@ -221,11 +210,7 @@ export const SearchFormLayout = ({ externalFilters, setExternalFilters }) => {
         </Tooltip>
         <Tooltip title="Copy search form to clipboard.">
           <CopyToClipboard
-            text={
-              process.env.REACT_APP_BASE_SEARCH_URL +
-              "?" +
-              new URLSearchParams(filters)
-            }
+            text={process.env.REACT_APP_BASE_SEARCH_URL + "?" + new URLSearchParams(filters)}
             onCopy={() => message.success("Successfully copied to clipboard!")}
           >
             <Button type="primary" icon={<CopyOutlined />} size="middle" />
@@ -240,11 +225,7 @@ export const SearchFormLayout = ({ externalFilters, setExternalFilters }) => {
           />
         </Tooltip>
         <Tooltip
-          title={
-            localStorage.getItem("filters") === null
-              ? "No saved available."
-              : "Open saved filters."
-          }
+          title={localStorage.getItem("filters") === null ? "No saved available." : "Open saved filters."}
           placement="bottom"
         >
           <Button
@@ -443,8 +424,7 @@ export const SearchFormLayout = ({ externalFilters, setExternalFilters }) => {
               className="SearchForm--Slider"
               range
               defaultValue={
-                externalFilters.pointsRange[0] === null &&
-                externalFilters.pointsRange[1] === null
+                externalFilters.pointsRange[0] === null && externalFilters.pointsRange[1] === null
                   ? [overview.points[0], overview.points[1]]
                   : externalFilters.pointsRange
               }
@@ -475,8 +455,7 @@ export const SearchFormLayout = ({ externalFilters, setExternalFilters }) => {
               className="SearchForm--Slider"
               range
               defaultValue={
-                externalFilters.priceRange[0] === null &&
-                externalFilters.priceRange[1] === null
+                externalFilters.priceRange[0] === null && externalFilters.priceRange[1] === null
                   ? [overview.price[0], overview.price[1]]
                   : externalFilters.priceRange
               }
@@ -546,12 +525,7 @@ export const SearchFormLayout = ({ externalFilters, setExternalFilters }) => {
   //#region Output settings
 
   const outputSettingsMarkup = (
-    <Row
-      gutter={24}
-      justify="center"
-      align="middle"
-      className="SearchForm--OutputSettings"
-    >
+    <Row gutter={24} justify="center" align="middle" className="SearchForm--OutputSettings">
       <Col xs={24} sm={24} md={12} lg={12} xl={12} xxl={12}>
         <div className="SearchForm--SelectContainer">
           <Title level={5}>Sort By</Title>
@@ -594,19 +568,12 @@ export const SearchFormLayout = ({ externalFilters, setExternalFilters }) => {
   //#region Search Button
 
   const handleUrlSearch = (fil) => {
-    window.location.href =
-      process.env.REACT_APP_BASE_SEARCH_URL + "?" + new URLSearchParams(fil);
+    window.location.href = process.env.REACT_APP_BASE_SEARCH_URL + "?" + new URLSearchParams(fil);
   };
 
   const searchButtonMarkup = filters.submitOnChange ? (
     <Tooltip title="Disable submit on change if you want to use this action.">
-      <Button
-        type="primary"
-        icon={<SearchOutlined />}
-        size="middle"
-        disabled={true}
-        block
-      >
+      <Button type="primary" icon={<SearchOutlined />} size="middle" disabled={true} block>
         Search
       </Button>
     </Tooltip>
@@ -616,9 +583,7 @@ export const SearchFormLayout = ({ externalFilters, setExternalFilters }) => {
       icon={<SearchOutlined />}
       size="middle"
       defaultValue={filters.submitOnChange}
-      onClick={() =>
-        isAllListings ? searchWithFilters(filters) : handleUrlSearch(filters)
-      }
+      onClick={() => (isAllListings ? searchWithFilters(filters) : handleUrlSearch(filters))}
       block
     >
       Search
@@ -630,11 +595,7 @@ export const SearchFormLayout = ({ externalFilters, setExternalFilters }) => {
   //#region More Options
 
   const moreOptionsMarkup = (
-    <Space
-      className="SearchForm--MoreOptions"
-      direction="vertical"
-      size="middle"
-    >
+    <Space className="SearchForm--MoreOptions" direction="vertical" size="middle">
       <div className="SearchForm--Checkbox">
         <Checkbox
           onChange={(e) => {
@@ -666,8 +627,7 @@ export const SearchFormLayout = ({ externalFilters, setExternalFilters }) => {
           </Checkbox>
         )}
         <p className="SearchForm--OptionComment">
-          If selected, search will occur every time one of the fields is
-          changed.
+          If selected, search will occur every time one of the fields is changed.
         </p>
       </div>
 
@@ -689,8 +649,7 @@ export const SearchFormLayout = ({ externalFilters, setExternalFilters }) => {
           </Checkbox>
         )}
         <p className="SearchForm--OptionComment">
-          If selected, column sort will persist and combine with next selected
-          sort/s.
+          If selected, column sort will persist and combine with next selected sort/s.
         </p>
       </div>
 
@@ -702,12 +661,7 @@ export const SearchFormLayout = ({ externalFilters, setExternalFilters }) => {
 
   return (
     <div className="SearchForm">
-      <Card
-        className="SearchForm--Card"
-        title={searchFormHeaderMarkup}
-        hoverable
-        bordered={false}
-      >
+      <Card className="SearchForm--Card" title={searchFormHeaderMarkup} hoverable bordered={false}>
         {isBodyUpdating ? (
           <div>Load</div>
         ) : (
