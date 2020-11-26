@@ -128,7 +128,7 @@ export const AllListingsLayout = (props) => {
         <SearchForm externalFilters={body} setExternalFilters={setBody} />
       </div>
       <div className="AllListings--Table">
-        <div className="AllListings--TableListingText">Showing: {listingsData.length} listings.</div>
+        <div className="AllListings--TableListingText">Showing: {listingsData.length} listings</div>
         <Table
           scroll={{ x: 200, y: 600 }}
           bordered

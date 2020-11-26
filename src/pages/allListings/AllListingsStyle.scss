@@ -2,7 +2,6 @@
   position: relative;
   display: flex;
   justify-content: center;
-
   align-items: center;
   background-size: cover;
   background-repeat: no-repeat;
@@ -15,6 +14,10 @@
 }
 
 .AllListings--Table {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
   padding: 0px 2vw 0px 2vw;
 
   table {
@@ -22,11 +25,12 @@
   }
 
   .AllListings--TableListingText {
+    background: rgba(0, 0, 0, 0.5);
+    width: 250px;
     color: white;
-    text-align: left;
     font-weight: bold;
-    padding: 2vh 2vw 2vh 2vw;
     font-size: 16px;
+    margin: 0px 2vw 0px 2vw;
   }
 }
 .ant-table-cell {
