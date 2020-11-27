@@ -7,11 +7,11 @@ const cookies = new Cookies();
 export const calculateTimer = () => {
   var time = new Date();
   var mins = time.getMinutes();
-  var diff = mins % 30;
+  var diff = mins % 60;
   time.setMinutes(mins - diff);
   time.setSeconds(0);
 
-  return moment(time).add(30, "m").format("YYYY-MM-DD HH:mm:ss");
+  return moment(time).add(60, "m").format("YYYY-MM-DD HH:mm:ss");
 };
 
 export const validateAndSave = (value, saveInput, _savedFilters, _filters) => {
@@ -24,9 +24,7 @@ export const validateAndSave = (value, saveInput, _savedFilters, _filters) => {
   _savedFilters &&
     _savedFilters.forEach((save) => {
       if (save.name === saveInput) {
-        message.error(
-          "'" + saveInput + "' is already in use. Please input unique name!"
-        );
+        message.error("'" + saveInput + "' is already in use. Please input unique name!");
         flag = true;
         return false;
       }
@@ -37,9 +35,7 @@ export const validateAndSave = (value, saveInput, _savedFilters, _filters) => {
   _savedFilters.push({ name: saveInput, filters: _filters });
 
   localStorage.setItem("filters", JSON.stringify(_savedFilters));
-  message.success(
-    "You have successfully saved " + saveInput + " filter layout!"
-  );
+  message.success("You have successfully saved " + saveInput + " filter layout!");
 
   return true;
 };
