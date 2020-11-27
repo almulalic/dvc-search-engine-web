@@ -5,11 +5,7 @@ import axios from "axios";
 
 import "./AllListingsStyle.scss";
 import { Table, Empty, message, PageHeader, Card, Skeleton } from "antd";
-import {
-  EmptyData,
-  TableColumns,
-  TableColumnsMultiples,
-} from "../../shared/TableUtils";
+import { EmptyData, TableColumns, TableColumnsMultiples } from "../../shared/TableUtils";
 import { Footer } from "../../components/Footer/Footer";
 import { useHistory } from "react-router-dom";
 import queryString from "query-string";
@@ -28,8 +24,7 @@ export const AllListingsLayout = (props) => {
     if (Object.keys(props.location.search).length !== 0) {
       const searchBody = queryString.parse(props.location.search);
 
-      if (Object.keys(searchBody).length !== Object.keys(defaultState).length)
-        return defaultState;
+      if (Object.keys(searchBody).length !== Object.keys(defaultState).length) return defaultState;
 
       if (searchBody) {
         const points = searchBody.pointsRange.toString().split(",");
@@ -65,18 +60,9 @@ export const AllListingsLayout = (props) => {
                   .toString()
                   .split(",")
                   .map((x) => Number(x)),
-          pointsRange: [
-            points[0] ? Number(points[0]) : null,
-            points[1] ? Number(points[1]) : null,
-          ],
-          priceRange: [
-            price[0] ? Number(price[0]) : null,
-            price[1] ? Number(price[1]) : null,
-          ],
-          pricePerPointRange: [
-            ppp[0] ? Number(ppp[0]) : null,
-            ppp[1] ? Number(ppp[1]) : null,
-          ],
+          pointsRange: [points[0] ? Number(points[0]) : null, points[1] ? Number(points[1]) : null],
+          priceRange: [price[0] ? Number(price[0]) : null, price[1] ? Number(price[1]) : null],
+          pricePerPointRange: [ppp[0] ? Number(ppp[0]) : null, ppp[1] ? Number(ppp[1]) : null],
           idInput: searchBody.idInput.toString(),
           sidx: searchBody.sidx.toString(),
           sord: searchBody.sord.toString(),
@@ -133,47 +119,30 @@ export const AllListingsLayout = (props) => {
   }, [body]);
 
   const noUrlMessage = () => {
-    message.info(
-      "Unfortunatley, there is no URL link available for this property."
-    );
+    message.info("Unfortunatley, there is no URL link available for this property.");
   };
-
-  const history = useHistory();
 
   return (
     <div className="AllListings">
-      <div>
-        <PageHeader
-          className="site-page-header"
-          onBack={() => history.push("/landing")}
-          title="All Listtings"
-        />
-      </div>
       <div className="AllListings--SearchForm" style={{ paddingTop: "5rem" }}>
         <SearchForm externalFilters={body} setExternalFilters={setBody} />
       </div>
       <div className="AllListings--Table">
-        <div className="AllListings--TableListingText">
-          Showing: {listingsData.length} listings.
-        </div>
+        <div className="AllListings--TableListingText">Showing: {listingsData.length} listings</div>
         <Table
           scroll={{ x: 200, y: 600 }}
           bordered
           showHeader
           dataSource={isFetchingData ? emptyData : listingsData}
           pagination={{ position: ["bottomCenter"] }}
-          columns={
-            body?.multipleSorterEnabled ? TableColumnsMultiples : TableColumns
-          }
+          columns={body?.multipleSorterEnabled ? TableColumnsMultiples : TableColumns}
           loading={isFetchingData}
           className="AllListings--Table"
           rowClassName="AllListings--Table-Row"
           onRow={(record, rowIndex) => {
             return {
-              onClick: (event) => {
-                return record.href
-                  ? window.open(record.href, "_blank")
-                  : noUrlMessage();
+              onClick: () => {
+                return record.href ? window.open(record.href, "_blank") : noUrlMessage();
               },
             };
           }}
