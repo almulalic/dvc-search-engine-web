@@ -7,8 +7,7 @@ const getStatusColor = (status) => {
   if (status === undefined || status === null) return "status-nostatus";
   else if (status.toLowerCase().includes("expires")) return "status-expieres";
   else if (status.toLowerCase().includes("extended")) return "status-extended";
-  else
-    return "status-" + status.toLowerCase().replace(" ", "").replace(" ", "");
+  else return "status-" + status.toLowerCase().replace(" ", "").replace(" ", "");
 };
 
 export const StatusColors = {
@@ -35,10 +34,10 @@ export const TableColumns = [
     align: "center" as AlignType,
     dataIndex: "id",
     width: 125,
-    render: (text, column) => {
+    render: (val, column) => {
       return (
         <a style={{ fontWeight: "bold" }} target="_blank" href={column.href}>
-          {text}
+          {val == null || val == undefined || val == NaN ? "Not avaiable" : val}
         </a>
       );
     },
@@ -50,7 +49,11 @@ export const TableColumns = [
     dataIndex: "broker",
     align: "center" as AlignType,
     width: 200,
-    render: (val) => <Title level={5}>{BrokerTypes[val]}</Title>,
+    render: (val) => (
+      <Title level={5}>
+        {val == null || val == undefined || val == NaN ? "Not avaiable" : BrokerTypes[val]}
+      </Title>
+    ),
     sorter: (a, b) => a.broker - b.broker,
   },
   {
@@ -59,7 +62,11 @@ export const TableColumns = [
     dataIndex: "resort",
     align: "center" as AlignType,
     width: 200,
-    render: (val) => <Title level={5}>{ResortTypes[val]}</Title>,
+    render: (val) => (
+      <Title level={5}>
+        {val == null || val == undefined || val == NaN ? "Not avaiable" : ResortTypes[val]}
+      </Title>
+    ),
     sorter: (a, b) => a.resort - b.resort,
   },
   {
@@ -67,7 +74,9 @@ export const TableColumns = [
     title: <span className="TableHeader">PRICE</span>,
     dataIndex: "price",
     align: "center" as AlignType,
-    render: (text) => <Title level={5}>{text} $</Title>,
+    render: (val) => (
+      <Title level={5}>{val == null || val == undefined || val == NaN ? "Not avaiable" : val} P</Title>
+    ),
     sorter: (a, b) => a.price - b.price,
   },
   {
@@ -75,7 +84,9 @@ export const TableColumns = [
     title: <span className="TableHeader">POINTS</span>,
     dataIndex: "points",
     align: "center" as AlignType,
-    render: (text) => <Title level={5}>{text} P</Title>,
+    render: (val) => (
+      <Title level={5}>{val == null || val == undefined || val == NaN ? "Not avaiable" : val} P</Title>
+    ),
     sorter: (a, b) => a.points - b.points,
   },
   {
@@ -84,7 +95,9 @@ export const TableColumns = [
     dataIndex: "pricePerPoint",
     width: 175,
     align: "center" as AlignType,
-    render: (text) => <Title level={5}>{text} P/$</Title>,
+    render: (val) => (
+      <Title level={5}>{val == null || val == undefined || val == NaN ? "Not avaiable" : val} P/$</Title>
+    ),
     sorter: (a, b) => a.pricePerPoint - b.pricePerPoint,
   },
   {
@@ -94,9 +107,9 @@ export const TableColumns = [
     ellipsis: true,
     width: 200,
     align: "center" as AlignType,
-    render: (text) => (
+    render: (val) => (
       <Title level={5} ellipsis>
-        {text}
+        {val == null || val == undefined || val == NaN ? "Not avaiable" : val}
       </Title>
     ),
   },
@@ -106,7 +119,11 @@ export const TableColumns = [
     dataIndex: "useYear",
     width: 125,
     align: "center" as AlignType,
-    render: (val) => <Title level={5}>{UseYearTypes[val]}</Title>,
+    render: (val) => (
+      <Title level={5}>
+        {val == null || val == undefined || val == NaN ? "Not avaiable" : UseYearTypes[val]}
+      </Title>
+    ),
     sorter: (a, b) => a.useYear - b.useYear,
   },
   {
@@ -115,7 +132,9 @@ export const TableColumns = [
     dataIndex: "status",
     align: "center" as AlignType,
     render: (val) => (
-      <Tag color={StatusColors[val]}>{StatusTypes[val].toUpperCase()}</Tag>
+      <Tag color={StatusColors[val]}>
+        {val == null || val == undefined || val == NaN ? "Not avaiable" : StatusTypes[val].toUpperCase()}
+      </Tag>
     ),
     sorter: (a, b) => a.status - b.status,
   },
@@ -235,9 +254,7 @@ export const TableColumnsMultiples = [
     dataIndex: "status",
     align: "center" as AlignType,
     width: 100,
-    render: (val) => (
-      <Tag color={StatusColors[val]}>{StatusTypes[val].toUpperCase()}</Tag>
-    ),
+    render: (val) => <Tag color={StatusColors[val]}>{StatusTypes[val].toUpperCase()}</Tag>,
     sorter: {
       compare: (a, b) => a.status - b.status,
       multiple: 0,
