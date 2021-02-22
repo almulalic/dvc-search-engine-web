@@ -443,7 +443,7 @@ export const SearchFormLayout = ({ externalFilters, setExternalFilters }) => {
           <Title level={5}>
             Price [
             <span className="SearchForm--RangeLables">
-              {numeral(overview.price[0]).format("0,0[.]00 $")}
+              {numeral(overview.price[0]).format("0,0[.]00 $")} -
               {numeral(overview.price[1]).format("0,0[.]00 $")}
             </span>
             ]

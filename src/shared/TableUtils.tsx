@@ -1,6 +1,7 @@
 import { Tag, Typography } from "antd";
 import React from "react";
 import { BrokerTypes, ResortTypes, StatusTypes, UseYearTypes } from "./Types";
+import numeral from "numeral";
 const { Title } = Typography;
 
 const getStatusColor = (status) => {
@@ -75,7 +76,9 @@ export const TableColumns = [
     dataIndex: "price",
     align: "center" as AlignType,
     render: (val) => (
-      <Title level={5}>{val == null || val == undefined || val == NaN ? "Not avaiable" : val} P</Title>
+      <Title level={5}>
+        {val == null || val == undefined || val == NaN ? "Not avaiable" : numeral(val).format("0,0[.]00 $")}
+      </Title>
     ),
     sorter: (a, b) => a.price - b.price,
   },
@@ -85,7 +88,11 @@ export const TableColumns = [
     dataIndex: "points",
     align: "center" as AlignType,
     render: (val) => (
-      <Title level={5}>{val == null || val == undefined || val == NaN ? "Not avaiable" : val} P</Title>
+      <Title level={5}>
+        {val == null || val == undefined || val == NaN
+          ? "Not avaiable"
+          : `${numeral(val).format("0,0[.]00")} P`}
+      </Title>
     ),
     sorter: (a, b) => a.points - b.points,
   },
@@ -96,7 +103,11 @@ export const TableColumns = [
     width: 175,
     align: "center" as AlignType,
     render: (val) => (
-      <Title level={5}>{val == null || val == undefined || val == NaN ? "Not avaiable" : val} P/$</Title>
+      <Title level={5}>
+        {val == null || val == undefined || val == NaN
+          ? "Not avaiable"
+          : `${numeral(val).format("0,0[.]00")} P/$`}
+      </Title>
     ),
     sorter: (a, b) => a.pricePerPoint - b.pricePerPoint,
   },
