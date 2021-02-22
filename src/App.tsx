@@ -8,9 +8,7 @@ const App = () => {
     <div className="App">
       <Router>
         <Switch>
-          <Route exact path="/">
-            <Redirect to="/allListings" />
-          </Route>
+          <Route exact path="/" component={AllListings} />
           <Route exact path="/landing" component={Landing} />
           <Route exact path="/allListings" component={AllListings} />
         </Switch>
