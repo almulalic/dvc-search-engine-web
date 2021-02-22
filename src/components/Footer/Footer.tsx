@@ -22,9 +22,7 @@ export const Footer = () => {
 
   const sendContact = () => {
     if (body.name === "" || body.email === "" || body.message === "") {
-      message.error(
-        "You must fill out all fields before you can submit the form."
-      );
+      message.error("You must fill out all fields before you can submit the form.");
       return;
     }
 
@@ -34,7 +32,7 @@ export const Footer = () => {
     }
 
     axios
-      .post(process.env.BASE_API + "/contact/submit", body)
+      .post(process.env.REACT_APP_BASE_API_URL + "/contact/submit", body)
       .then((res) => {
         setContactModalVisible(false);
         message.success("Contact form submited successfully!");
@@ -61,8 +59,8 @@ export const Footer = () => {
       ]}
     >
       <Title level={5} style={{ textAlign: "center" }}>
-        If you have any issues with this platform or if you want to report a bug
-        you can contact us via email or in text field below.
+        If you have any issues with this platform or if you want to report a bug you can contact us via email
+        or in text field below.
       </Title>
       <hr />
       <div className="Footer-ContactModal">
@@ -139,10 +137,7 @@ export const Footer = () => {
 
           <div className="col-md-2 mb-3">
             <h6 className="text-uppercase font-weight-bold">
-              <a
-                className="Footer-Link"
-                onClick={() => setContactModalVisible(true)}
-              >
+              <a className="Footer-Link" onClick={() => setContactModalVisible(true)}>
                 Contact
               </a>
             </h6>
@@ -153,13 +148,11 @@ export const Footer = () => {
         <div className="row d-flex text-center justify-content-center mb-md-0 mb-4">
           <div className="col-md-8 col-12 mt-5">
             <p style={{ lineHeight: "1.8rem", margin: 0, padding: 0 }}>
-              DVC Resales Search Engine is a search engine that collects data
-              from different DVC realested listings websites, and to this day 5
-              different listing websites are supported with over 1000 listings.
-              This engine does not add any additional content it's used only for
-              gathering data. Every listing that you see is linked to an
-              external listing on the source website. If you want to go and see
-              more details of the listing you can click the view listing button.
+              DVC Resales Search Engine is a search engine that collects data from different DVC realested
+              listings websites, and to this day 5 different listing websites are supported with over 1000
+              listings. This engine does not add any additional content it's used only for gathering data.
+              Every listing that you see is linked to an external listing on the source website. If you want
+              to go and see more details of the listing you can click the view listing button.
             </p>
           </div>
         </div>
@@ -169,10 +162,7 @@ export const Footer = () => {
 
       <div className="footer-copyright text-center py-3 Footer-Credits">
         © 2020 Copyright:
-        <a
-          href="https://www.linkedin.com/in/almir-mulali%C4%87-9097b3195/"
-          target="_blank"
-        >
+        <a href="https://www.linkedin.com/in/almir-mulali%C4%87-9097b3195/" target="_blank">
           Mulalić Almir
         </a>
         Idea from:
